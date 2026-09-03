@@ -5,7 +5,7 @@ configuration:
   enableSPA: true
   enablePopovers: true
   locale: zh-CN
-  baseUrl: auyuir.github.io/paper-notes
+  baseUrl: futuresxy.github.io/paper_read
   ignorePatterns:
     - private
     - templates
@@ -220,6 +220,10 @@ plugins:
         - description
         - tags
         - aliases
+        - authors
+        - venue
+        - year
+        - doi
       excludedProperties: []
       hidePropertiesView: false
       delimiters: ---

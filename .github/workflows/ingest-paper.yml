@@ -1,0 +1,180 @@
+name: Generate and publish paper notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      pdf_url:
+        description: Direct public URL of the PDF
+        required: true
+        type: string
+      collection:
+        description: Content category, for example ISCA26 or LLM Theories
+        required: true
+        default: misc
+        type: string
+      tags:
+        description: Comma-separated Quartz tags
+        required: false
+        default: paper
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  MODEL_PROVIDER: ${{ vars.MODEL_PROVIDER }}
+  MODEL: ${{ vars.TEXT_MODEL }}
+  MODEL_NAME_IMAGE: ${{ vars.IMAGE_MODEL }}
+  BASE_URL: ${{ vars.LLM_BASE_URL }}
+  WIRE_API: ${{ vars.LLM_WIRE_API }}
+  OPENAI_API_KEY: ${{ secrets.GLM_API_KEY || secrets.OPENAI_API_KEY }}
+  MINERU_API_TOKEN: ${{ secrets.MINERU_API_TOKEN }}
+  MINERU_BASE_URL: ${{ vars.MINERU_BASE_URL || 'https://mineru.net/api/v4' }}
+  IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
+  IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+  IMAGE_WIRE_API: ${{ vars.IMAGE_WIRE_API }}
+  MODEL_REASONING_EFFORT: ${{ vars.MODEL_REASONING_EFFORT || 'high' }}
+  TEXT_MAX_WORKERS: "2"
+  IMAGE_MAX_WORKERS: "2"
+
+jobs:
+  generate-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    outputs:
+      slug: ${{ steps.import.outputs.slug }}
+      destination: ${{ steps.import.outputs.destination }}
+    steps:
+      - name: Check out paper_read
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: BlaBlaPaper/requirements.txt
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Validate pipeline configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          for value_name in OPENAI_API_KEY MINERU_API_TOKEN MODEL MODEL_NAME_IMAGE BASE_URL WIRE_API; do
+            if [[ -z "${!value_name:-}" ]]; then
+              echo "Missing GitHub Actions secret/variable: $value_name" >&2
+              exit 1
+            fi
+          done
+
+      - name: Install generator and site dependencies
+        run: |
+          python -m pip install -r BlaBlaPaper/requirements.txt
+          npm ci
+          npx quartz plugin install --concurrency 2
+
+      - name: Download PDF
+        env:
+          PDF_URL: ${{ inputs.pdf_url }}
+        run: |
+          mkdir -p .pipeline/work
+          curl --fail --location --retry 3 --output .pipeline/work/paper.pdf "$PDF_URL"
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.pipeline/work/paper.pdf')
+          if not path.read_bytes().startswith(b'%PDF-'):
+              raise SystemExit('Downloaded file is not a PDF; use a direct public PDF URL.')
+          PY
+
+      - name: Analyze and translate paper
+        working-directory: .pipeline/work
+        run: python "$GITHUB_WORKSPACE/BlaBlaPaper/main.py" "$GITHUB_WORKSPACE/.pipeline/work/paper.pdf"
+
+      - name: Locate generated bundle
+        id: locate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t report_dirs < <(find .pipeline/work/outputs -mindepth 1 -maxdepth 1 -type d -print)
+          if [[ ${#report_dirs[@]} -ne 1 ]]; then
+            echo "Expected exactly one report directory, found ${#report_dirs[@]}" >&2
+            exit 1
+          fi
+          echo "report_dir=${report_dirs[0]}" >> "$GITHUB_OUTPUT"
+          echo "source_sha256=$(sha256sum .pipeline/work/paper.pdf | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate and import into Quartz content
+        id: import
+        env:
+          REPORT_DIR: ${{ steps.locate.outputs.report_dir }}
+          SOURCE_SHA256: ${{ steps.locate.outputs.source_sha256 }}
+          COLLECTION: ${{ inputs.collection }}
+          TAGS: ${{ inputs.tags }}
+        run: |
+          python scripts/import_blablapaper.py \
+            --source "$REPORT_DIR" \
+            --content-root content \
+            --collection "$COLLECTION" \
+            --tags "$TAGS" \
+            --source-sha256 "$SOURCE_SHA256" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Test publisher
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: Build Quartz site
+        run: npx quartz build -v
+
+      - name: Commit generated source notes
+        env:
+          PAPER_SLUG: ${{ steps.import.outputs.slug }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content
+          if git diff --cached --quiet; then
+            echo "No generated content changed."
+          else
+            git commit -m "paper: publish $PAPER_SLUG"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Write run summary
+        env:
+          PAPER_SLUG: ${{ steps.import.outputs.slug }}
+          DESTINATION: ${{ steps.import.outputs.destination }}
+        run: |
+          echo "## Paper generated" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Slug: \`$PAPER_SLUG\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Content: \`$DESTINATION\`" >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: generate-and-build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

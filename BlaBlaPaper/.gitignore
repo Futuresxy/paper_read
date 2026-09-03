@@ -1,0 +1,23 @@
+# 环境变量（含 API Key，切勿上传）
+.env
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# 临时文件和解析中间产物
+*.zip
+*_extracted/
+
+# Obisidian 配置
+.obsidian/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 论文产出（归档在 orphan 分支 outputs，代码分支不跟踪）
+papers/
+outputs/

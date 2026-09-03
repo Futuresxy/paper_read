@@ -27,4 +27,4 @@ bash scripts/run_paper_pipeline.sh papers/your-paper.pdf \
 - 图表详解 `figs_notes.md`
 - 全文翻译 `translation_notes.md`
 
-生成内容会自动进入 `content/<分类>/<论文 slug>/`，随后由 Quartz 构建并发布。`BlaBlaPaper/` 生成器已直接收录在本仓库中，不需要手工移动结果文件。完整配置和使用方法见 [PIPELINE_SETUP.md](PIPELINE_SETUP.md)。
+生成内容会自动进入 `content/<分类>/<论文 slug>/`，最终只公开上述四份 Markdown 和 `images/`；PDF、日志、JSON、checkpoint 与解析中间文件不会提交。随后由 Quartz 构建并发布。`BlaBlaPaper/` 生成器已直接收录在本仓库中，不需要手工移动结果文件。完整配置和使用方法见 [PIPELINE_SETUP.md](PIPELINE_SETUP.md)。

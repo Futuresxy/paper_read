@@ -142,13 +142,11 @@ configuration:
 
 ```text
 content/<collection>/<slug>/
-├── index.md
 ├── paper_notes.md
 ├── ELI5_notes.md
 ├── figs_notes.md
 ├── translation_notes.md
-├── paper.json
 └── images/
 ```
 
-`index.md` 是论文入口页，四份报告分别提供技术解析、通俗讲解、图表详解和全文翻译。`paper.json` 保存元数据和报告 hash，便于追踪生成结果。
+发布器采用严格白名单：只把四份报告 Markdown 和常见格式的图片写入 `content`。`info.json`、PDF、日志、checkpoint、解析中间文件和其他 JSON 都只留在被 Git 忽略的 `.pipeline-work/`，不会出现在 GitHub 或网站中。Quartz 会根据这个目录自动生成论文文件夹页面。

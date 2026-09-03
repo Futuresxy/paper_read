@@ -4,22 +4,23 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import shutil
 import sys
-from datetime import datetime, timezone
+from difflib import get_close_matches
 from pathlib import Path
 from typing import Any
 
 
 REPORTS = (
-    ("paper_notes.md", "技术解析"),
-    ("ELI5_notes.md", "通俗讲解"),
-    ("figs_notes.md", "图表详解"),
-    ("translation_notes.md", "原文翻译"),
+    "paper_notes.md",
+    "ELI5_notes.md",
+    "figs_notes.md",
+    "translation_notes.md",
 )
+
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".avif"}
 
 IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
@@ -51,77 +52,51 @@ def _safe_collection(value: str) -> Path:
     return path
 
 
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def _parse_tags(value: str) -> list[str]:
-    tags: list[str] = []
-    for item in (part.strip() for part in value.split(",")):
-        if item and item not in tags:
-            tags.append(item)
-    if "paper" not in tags:
-        tags.insert(0, "paper")
-    return tags
-
-
-def _yaml_string(value: Any) -> str:
-    return json.dumps(str(value), ensure_ascii=False)
-
-
-def _validate_image_links(source: Path) -> None:
+def _prepare_reports(source: Path) -> dict[str, str]:
+    available_images = sorted(
+        path.relative_to(source).as_posix()
+        for path in (source / "images").rglob("*")
+        if path.is_file()
+        and not path.is_symlink()
+        and path.suffix.lower() in IMAGE_SUFFIXES
+    )
+    available_set = set(available_images)
     missing: list[str] = []
-    for report_name, _ in REPORTS:
+    prepared: dict[str, str] = {}
+
+    for report_name in REPORTS:
         report_path = source / report_name
         text = report_path.read_text(encoding="utf-8")
         if not text.strip():
             raise BundleError(f"报告为空: {report_path}")
-        for raw_target in IMAGE_PATTERN.findall(text):
+
+        def repair_link(match: re.Match[str]) -> str:
+            raw_target = match.group(1)
             target = raw_target.strip().split(maxsplit=1)[0].strip("<>")
             if target.startswith(("http://", "https://", "data:")):
-                continue
+                return match.group(0)
             target = target.split("#", 1)[0].split("?", 1)[0]
-            if target and not (source / target).is_file():
-                missing.append(f"{report_name}: {raw_target}")
+            if target in available_set:
+                return match.group(0)
+
+            candidates = get_close_matches(target, available_images, n=2, cutoff=0.96)
+            if len(candidates) == 1:
+                raw_token = raw_target.strip().split(maxsplit=1)[0]
+                corrected = candidates[0]
+                if raw_token.startswith("<") and raw_token.endswith(">"):
+                    corrected = f"<{corrected}>"
+                corrected_target = raw_target.replace(raw_token, corrected, 1)
+                return match.group(0).replace(raw_target, corrected_target, 1)
+
+            missing.append(f"{report_name}: {raw_target}")
+            return match.group(0)
+
+        prepared[report_name] = IMAGE_PATTERN.sub(repair_link, text)
+
     if missing:
         details = "\n  - ".join(missing[:20])
         raise BundleError(f"存在找不到的本地图片引用:\n  - {details}")
-
-
-def _render_index(info: dict[str, Any], tags: list[str]) -> str:
-    title = info.get("paper_title") or info.get("title") or info.get("index")
-    metadata = info.get("metadata") if isinstance(info.get("metadata"), dict) else {}
-    description = info.get("description") or ""
-
-    lines = ["---", f"title: {_yaml_string(title)}"]
-    if description:
-        lines.append(f"description: {_yaml_string(description)}")
-    lines.append("tags:")
-    lines.extend(f"  - {_yaml_string(tag)}" for tag in tags)
-
-    authors = metadata.get("authors")
-    if isinstance(authors, list) and authors:
-        lines.append("authors:")
-        lines.extend(f"  - {_yaml_string(author)}" for author in authors)
-    for key in ("venue", "year", "doi"):
-        value = metadata.get(key)
-        if value not in (None, ""):
-            lines.append(f"{key}: {_yaml_string(value)}")
-
-    lines.extend(["---", "", f"# {title}", ""])
-    if description:
-        lines.extend([description, ""])
-    lines.append("## 阅读入口")
-    lines.append("")
-    for report_name, label in REPORTS:
-        lines.append(f"- [{label}]({report_name})")
-    lines.append("")
-    return "\n".join(lines)
-
+    return prepared
 
 def import_bundle(
     source: Path,
@@ -140,44 +115,34 @@ def import_bundle(
     if not SAFE_SLUG.fullmatch(slug):
         raise BundleError(f"info.json 中的 index 不是安全 URL slug: {slug!r}")
 
-    missing_reports = [name for name, _ in REPORTS if not (source / name).is_file()]
+    missing_reports = [name for name in REPORTS if not (source / name).is_file()]
     if missing_reports:
         raise BundleError("论文流水线没有完整生成四份报告: " + ", ".join(missing_reports))
     if not (source / "images").is_dir():
         raise BundleError(f"缺少图片目录: {source / 'images'}")
-    _validate_image_links(source)
+    prepared_reports = _prepare_reports(source)
 
     destination = content_root / _safe_collection(collection) / slug
     destination.mkdir(parents=True, exist_ok=True)
 
-    for report_name, _ in REPORTS:
-        shutil.copy2(source / report_name, destination / report_name)
-    shutil.copytree(source / "images", destination / "images", dirs_exist_ok=True)
+    for report_name in REPORTS:
+        (destination / report_name).write_text(
+            prepared_reports[report_name],
+            encoding="utf-8",
+        )
 
-    tags = _parse_tags(tags_value)
-    (destination / "index.md").write_text(_render_index(info, tags), encoding="utf-8")
+    destination_images = destination / "images"
+    destination_images.mkdir(parents=True, exist_ok=True)
+    for image_path in sorted((source / "images").rglob("*")):
+        if image_path.is_symlink():
+            raise BundleError(f"图片目录不允许包含符号链接: {image_path}")
+        if not image_path.is_file() or image_path.suffix.lower() not in IMAGE_SUFFIXES:
+            continue
+        relative_path = image_path.relative_to(source / "images")
+        target_path = destination_images / relative_path
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(image_path, target_path)
 
-    manifest = {
-        "schema_version": 1,
-        "slug": slug,
-        "paper_title": info.get("paper_title") or info.get("title") or slug,
-        "metadata": info.get("metadata") or {},
-        "description": info.get("description") or "",
-        "collection": collection,
-        "tags": tags,
-        "source_sha256": source_sha256,
-        "generator": "BlaBlaPaper",
-        "imported_at": datetime.now(timezone.utc).isoformat(),
-        "reports": [name for name, _ in REPORTS],
-        "report_sha256": {
-            name: _sha256(source / name)
-            for name, _ in REPORTS
-        },
-    }
-    (destination / "paper.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
     return destination
 
 

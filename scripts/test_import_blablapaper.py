@@ -15,6 +15,7 @@ class ImportBlaBlaPaperTests(unittest.TestCase):
         self.source = self.root / "outputs" / "test-paper"
         (self.source / "images").mkdir(parents=True)
         (self.source / "images" / "figure.png").write_bytes(b"image")
+        (self.source / "images" / "metadata.json").write_text("{}", encoding="utf-8")
         (self.source / "info.json").write_text(
             json.dumps(
                 {
@@ -51,10 +52,17 @@ class ImportBlaBlaPaperTests(unittest.TestCase):
         self.assertEqual(destination, self.root / "content" / "ISCA26" / "test-paper")
         self.assertTrue((destination / "translation_notes.md").is_file())
         self.assertTrue((destination / "images" / "figure.png").is_file())
-        self.assertIn("[原文翻译](translation_notes.md)", (destination / "index.md").read_text())
-        manifest = json.loads((destination / "paper.json").read_text())
-        self.assertEqual(manifest["source_sha256"], "abc123")
-        self.assertEqual(manifest["tags"], ["paper", "llm", "inference"])
+        self.assertFalse((destination / "images" / "metadata.json").exists())
+        self.assertEqual(
+            {path.name for path in destination.iterdir()},
+            {
+                "paper_notes.md",
+                "ELI5_notes.md",
+                "figs_notes.md",
+                "translation_notes.md",
+                "images",
+            },
+        )
 
     def test_rejects_path_traversal_collection(self) -> None:
         with self.assertRaises(BundleError):
@@ -67,6 +75,25 @@ class ImportBlaBlaPaperTests(unittest.TestCase):
         )
         with self.assertRaises(BundleError):
             import_bundle(self.source, self.root / "content", "misc", "paper")
+
+    def test_repairs_unique_nearby_hashed_image_name(self) -> None:
+        actual_name = "a" * 63 + "b.jpg"
+        typo_name = "a" * 63 + "c.jpg"
+        (self.source / "images" / actual_name).write_bytes(b"image")
+        (self.source / "paper_notes.md").write_text(
+            f"# Correct typo\n\n![](images/{typo_name})\n",
+            encoding="utf-8",
+        )
+
+        destination = import_bundle(
+            self.source,
+            self.root / "content",
+            "misc",
+            "paper",
+        )
+        published = (destination / "paper_notes.md").read_text(encoding="utf-8")
+        self.assertIn(f"images/{actual_name}", published)
+        self.assertNotIn(f"images/{typo_name}", published)
 
 
 if __name__ == "__main__":

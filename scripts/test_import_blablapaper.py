@@ -95,6 +95,33 @@ class ImportBlaBlaPaperTests(unittest.TestCase):
         self.assertIn(f"images/{actual_name}", published)
         self.assertNotIn(f"images/{typo_name}", published)
 
+    def test_repairs_truncated_hashed_image_name(self) -> None:
+        actual_name = (
+            "41d28965663a6d74e8dc1ed03a41cf3793380cb88bf4f3b8c542cb4236abaa71.jpg"
+        )
+        typo_names = (
+            "41d28965663a6d74e8dc1ed03a41cf3793380cb88bf4236abaa71.jpg",
+            "41d28965663a6d74e8dc1ed03a41cf3793380cb88bf4b234abaa71.jpg",
+        )
+        (self.source / "images" / actual_name).write_bytes(b"image")
+        (self.source / "paper_notes.md").write_text(
+            "# Correct truncated hashes\n\n"
+            + "\n".join(f"![](images/{name})" for name in typo_names)
+            + "\n",
+            encoding="utf-8",
+        )
+
+        destination = import_bundle(
+            self.source,
+            self.root / "content",
+            "misc",
+            "paper",
+        )
+        published = (destination / "paper_notes.md").read_text(encoding="utf-8")
+        self.assertEqual(published.count(f"images/{actual_name}"), 2)
+        for typo_name in typo_names:
+            self.assertNotIn(f"images/{typo_name}", published)
+
 
 if __name__ == "__main__":
     unittest.main()

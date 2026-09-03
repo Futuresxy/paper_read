@@ -24,10 +24,35 @@ IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".avif"}
 
 IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
+HASH_STEM = re.compile(r"^[0-9a-fA-F]{32,}$")
 
 
 class BundleError(ValueError):
     """Raised when generated content is incomplete or unsafe to publish."""
+
+
+def _unique_hash_prefix_match(target: str, available_images: list[str]) -> str | None:
+    """Resolve a damaged content-hash filename without guessing between images."""
+    target_path = Path(target)
+    target_stem = target_path.stem
+    if not HASH_STEM.fullmatch(target_stem):
+        return None
+
+    # MinerU image names are SHA-256-like hashes. Models occasionally omit a
+    # chunk near the end, while retaining a long prefix. A 32-hex-character
+    # prefix is sufficiently specific, but we still require exactly one match.
+    prefix = target_stem[:32].lower()
+    candidates = []
+    for candidate in available_images:
+        candidate_path = Path(candidate)
+        if (
+            candidate_path.parent == target_path.parent
+            and candidate_path.suffix.lower() == target_path.suffix.lower()
+            and HASH_STEM.fullmatch(candidate_path.stem)
+            and candidate_path.stem.lower().startswith(prefix)
+        ):
+            candidates.append(candidate)
+    return candidates[0] if len(candidates) == 1 else None
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -79,10 +104,12 @@ def _prepare_reports(source: Path) -> dict[str, str]:
             if target in available_set:
                 return match.group(0)
 
+            hash_match = _unique_hash_prefix_match(target, available_images)
             candidates = get_close_matches(target, available_images, n=2, cutoff=0.96)
-            if len(candidates) == 1:
+            replacement = hash_match or (candidates[0] if len(candidates) == 1 else None)
+            if replacement:
                 raw_token = raw_target.strip().split(maxsplit=1)[0]
-                corrected = candidates[0]
+                corrected = replacement
                 if raw_token.startswith("<") and raw_token.endswith(">"):
                     corrected = f"<{corrected}>"
                 corrected_target = raw_target.replace(raw_token, corrected, 1)

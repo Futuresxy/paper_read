@@ -122,6 +122,33 @@ class ImportBlaBlaPaperTests(unittest.TestCase):
         for typo_name in typo_names:
             self.assertNotIn(f"images/{typo_name}", published)
 
+    def test_repairs_inserted_and_corrupted_hash_chunks(self) -> None:
+        actual_name = (
+            "22122db5afaa5e9464134499126612245dc1e001f369c54bd64f8bab8a3ea748.jpg"
+        )
+        typo_names = (
+            "22122db5fbae3e9464134499126612245dc1e57d4c8dcd53e001f369c54bd64f8bab8a3ea748.jpg",
+            "22122db5fbaa3e9464134499126612245dc1e57d4c8dcd53e001f369c54bd64f8bab8a3ea748.jpg",
+        )
+        (self.source / "images" / actual_name).write_bytes(b"image")
+        (self.source / "paper_notes.md").write_text(
+            "# Correct inserted hash chunks\n\n"
+            + "\n".join(f"![](images/{name})" for name in typo_names)
+            + "\n",
+            encoding="utf-8",
+        )
+
+        destination = import_bundle(
+            self.source,
+            self.root / "content",
+            "misc",
+            "paper",
+        )
+        published = (destination / "paper_notes.md").read_text(encoding="utf-8")
+        self.assertEqual(published.count(f"images/{actual_name}"), 2)
+        for typo_name in typo_names:
+            self.assertNotIn(f"images/{typo_name}", published)
+
 
 if __name__ == "__main__":
     unittest.main()

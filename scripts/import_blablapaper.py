@@ -8,7 +8,7 @@ import json
 import re
 import shutil
 import sys
-from difflib import get_close_matches
+from difflib import SequenceMatcher, get_close_matches
 from pathlib import Path
 from typing import Any
 
@@ -52,7 +52,27 @@ def _unique_hash_prefix_match(target: str, available_images: list[str]) -> str |
             and candidate_path.stem.lower().startswith(prefix)
         ):
             candidates.append(candidate)
-    return candidates[0] if len(candidates) == 1 else None
+    if len(candidates) == 1:
+        return candidates[0]
+
+    # A model may corrupt the beginning of a hash or insert another chunk, so
+    # an exact prefix is not always retained. Accept only a single, very strong
+    # sequence match containing a long unchanged run. Random SHA-256 names are
+    # normally only about 20-30% similar, while a damaged reference remains
+    # above 80%.
+    similar_candidates = []
+    for candidate in available_images:
+        candidate_path = Path(candidate)
+        if (
+            candidate_path.parent != target_path.parent
+            or candidate_path.suffix.lower() != target_path.suffix.lower()
+            or not HASH_STEM.fullmatch(candidate_path.stem)
+        ):
+            continue
+        matcher = SequenceMatcher(None, target_stem.lower(), candidate_path.stem.lower())
+        if matcher.ratio() >= 0.80 and matcher.find_longest_match().size >= 24:
+            similar_candidates.append(candidate)
+    return similar_candidates[0] if len(similar_candidates) == 1 else None
 
 
 def _load_json(path: Path) -> dict[str, Any]:

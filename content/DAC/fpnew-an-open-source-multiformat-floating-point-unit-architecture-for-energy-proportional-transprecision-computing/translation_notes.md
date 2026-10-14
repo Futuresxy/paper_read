@@ -156,7 +156,7 @@ RI5CY 是一款开源的 32 位、四级流水线、顺序执行的 RISC-V RV32I
 
 1) ISA 扩展支持：RI5CY 支持 RISC-V “F” 标准 ISA 扩展，该扩展要求包含 32 个 32 位 FP 寄存器。该核心提供了省略 FP 寄存器、将 FP 数据存放于通用寄存器堆中的选项，以节省面积并减少数据搬运。<sup>6</sup>
 
-TABLE I  
+表 I
 配置到 RI5CY 核心中的 TP-FPU 配置情况。FPU 位宽为 $\mathrm { \Delta \ w f { p u } } = 3 2 \mathrm { b i t }$
 <table><tr><td>格式</td><td colspan="4">实现方式（周期数，通道数）</td></tr><tr><td></td><td>ADDMUL</td><td>DIVSQRT</td><td>COMP</td><td>CONV</td></tr><tr><td>FP32</td><td>合并式 (1,1)</td><td>禁用  $( - , - )$ </td><td>并行式 (1,1)</td><td>合并式 (1,2)</td></tr><tr><td>FP16</td><td>合并式 (1,2)</td><td>禁用 (-,-)</td><td>并行式 (1,2)</td><td>合并式 (1,2)</td></tr><tr><td>FP16alt</td><td>合并式 (1,2)</td><td>禁用 (-,-)</td><td>并行式 (1,2)</td><td>合并式 (1,2)</td></tr></table>
 
@@ -174,7 +174,7 @@ Ariane 是一款开源的 64 位、六级流水线、部分乱序（partially in
 
 1) ISA 扩展支持：Ariane 支持 RISC-V “F” 和 $\mathrm { ^ { 6 6 } D ^ { 3 } }$ 标准 ISA 扩展，这使得该核心的 FP 寄存器堆为 64 位宽。我们增加了对 FP16、FP16alt 和 FP8 运算的支持，以及包括 FP32 在内的所有这些格式的 SIMD 运算。我们支持灵活的 cast-and-pack 操作，但该版本的核心未配备扩展 FMA 操作。
 
-TABLE II  
+表 II
 配置到 Ariane 核心中的 TP-FPU 配置情况。FPU 位宽为 $\mathrm { \Delta w f p u } = 6 4 \mathrm { b i t }$
 <table><tr><td rowspan="2">格式</td><td colspan="4">实现方式（周期数，通道数）</td></tr><tr><td>ADDMUL</td><td>DIVSQRT</td><td>COMP</td><td>CONV</td></tr><tr><td>FP64</td><td>并行式 (4,1)</td><td>合并式 (21,1*)</td><td>并行式 (1,1)</td><td>合并式 (2,2*)</td></tr><tr><td>FP32</td><td>并行式 (3,2)</td><td>合并式 (11,0)</td><td>并行式 (1,2)</td><td>合并式 (2,0)</td></tr><tr><td>FP16</td><td>并行式 (3,4)</td><td>合并式 (7,0)</td><td>并行式 (1,4)</td><td>合并式 (2,2*)</td></tr><tr><td>FP16alt</td><td>并行式 (3,4)</td><td>合并式 (6,0)</td><td>并行式 (1,4)</td><td>合并式 (2,0)</td></tr><tr><td>FP8</td><td>并行式 (2,8)</td><td>合并式 (4,0)</td><td>并行式 (1,8)</td><td>合并式 (2,4)</td></tr></table>
 
@@ -283,7 +283,7 @@ for (int i = 0; i < n; ++i)
 macex f16(sum, a[i], b[i]);  
 Fig. 10. 对两个输入流 a 和 b 中的元素逐项乘积进行累加。输入为 FP16，结果在 采用 FP16 累加，在 中则采用 FP32。代码 c) 使用编译器内联函数来调用跨精度指令。
 
-TABLE III  
+表 III
 与图 11 中汇编代码对应的应用指标
 <table><tr><td></td><td>正确位数</td><td>结果相对精确值的误差</td><td>相对精确 FP16</td><td>核心相对能耗</td><td>系统</td></tr><tr><td>精确结果</td><td>37</td><td>0.0</td><td></td><td></td><td></td></tr><tr><td>转换为 FP16</td><td>12</td><td> $1 . 9 \times 1 0 ^ { - 4 }$ </td><td>0.0</td><td></td><td></td></tr><tr><td>结果 11 a)</td><td>9</td><td> $2 . 7 \times 1 0 ^ { - 3 }$ </td><td> $2 . 9 \times 1 0 ^ { - 3 }$ </td><td>0.60</td><td>0.63</td></tr><tr><td>结果 11 b)</td><td>22</td><td> $2 . 0 \times 1 0 ^ { - 7 }$ </td><td>0.0</td><td>1.00</td><td>1.00</td></tr><tr><td>结果 11 c)</td><td>19</td><td> $1 . 6 \times 1 0 ^ { - 6 }$ </td><td>0.0</td><td>1.16</td><td>1.03</td></tr><tr><td>结果 11 d)</td><td>19</td><td> $1 . 6 \times 1 0 ^ { - 6 }$ </td><td>0.0</td><td>0.97</td><td>0.75</td></tr><tr><td>结果 11 e)</td><td>22</td><td> $2 . 0 \times 1 0 ^ { - 7 }$ </td><td>0.0</td><td>0.63</td><td>0.63</td></tr></table>
 
@@ -348,7 +348,7 @@ Kaiser 等人 [21] 发表了在 FP64 上 FMA 操作的 RISC-V 专用实现，采
 
 据我们所知，目前尚无支持多种格式的全功能 TP-FPU 发表。然而，近年来已有多模式 FMA 架构被提出，通常支持两种或三种 FP 格式的计算 [29]–[32]，或整数与 FP 的组合支持 [34]。表 IV 在标称条件下将所提架构与我们的实现进行了比较。需要注意的是，我们工作中报告的结果测量的是执行 FMA 操作时整个 TP-FPU 的能耗，而非相关工作中所测量的孤立的 FMA 模块。
 
-TABLE IV
+表 IV
 标称条件下本工作（完整 FPU）与其他独立[多模式]架构的 FMA 比较
 <table><tr><td>格式</td><td>L/T*</td><td>性能† [Gflop/s]</td><td>能耗 [pJ/flop]</td><td>能效 [Gflop/s W]</td><td>相对值</td></tr><tr><td colspan="6">本工作，22 nm，0.8 Va，0.049 mm²（完整 FPU），923 MHz</td></tr><tr><td>FP64</td><td>标量 4/1</td><td>1.85</td><td>13.36</td><td>74.83</td><td>1.0×</td></tr><tr><td>FP32</td><td>标量 3/1</td><td>1.85</td><td>4.72</td><td>211.66</td><td>2.8×</td></tr><tr><td>FP16 标量</td><td>3/1</td><td>1.85</td><td>2.48</td><td>403.08</td><td>5.4×</td></tr><tr><td>FP16alt 标量</td><td>3/1</td><td>1.85</td><td>2.18</td><td>458.56</td><td>6.1×</td></tr><tr><td>FP8</td><td>标量 3/1</td><td>1.85</td><td>1.27</td><td>786.30</td><td>10.5×</td></tr><tr><td>FP32 向量</td><td>3/2</td><td>3.71</td><td>5.01</td><td>199.70</td><td>2.7×</td></tr><tr><td>FP16</td><td>向量 3/4</td><td>7.42</td><td>2.01</td><td>497.67</td><td>6.7×</td></tr><tr><td>FP16alt 向量</td><td>3/4</td><td>7.42</td><td>1.72</td><td>581.96</td><td>7.8×</td></tr><tr><td>FP8</td><td>向量 2/8</td><td>14.83</td><td>0.80</td><td>1244.78</td><td>16.6×</td></tr><tr><td colspan="6">Kaiser et al. [21]，22 nm，0.8 Vc，0.019 mm2，1.8 GHz</td></tr><tr><td>FP64</td><td>标量 3/1</td><td>3.60</td><td>26.40</td><td>37.88</td><td></td></tr><tr><td colspan="6">Manolopoulos et al. [29]，130 nm，1.2 Vb，0.287 mm2，291 MHz</td></tr><tr><td>FP64 标量</td><td></td><td>0.58</td><td>60.53</td><td></td><td>1.0×</td></tr><tr><td>FP32 向量</td><td>3/1 3/2</td><td>1.16</td><td>30.26</td><td>16.52 33.05</td><td>2.0×</td></tr><tr><td colspan="6">Arunachalam et al. [30]，130 nm，1.2 Vb，0.149 mm2，308 MHz</td></tr><tr><td>FP64 标量</td><td>8/1</td><td>0.62</td><td>28.86</td><td>34.64</td><td>1.0×</td></tr><tr><td>FP32</td><td>向量 8/2</td><td>1.23</td><td>14.43</td><td>69.29</td><td>2.0×</td></tr><tr><td colspan="6">Zhang et al. [31]，90 nm，1 Vc，0.181 mm2，667 MHz</td></tr><tr><td>FP64 标量</td><td>3/1</td><td>1.33</td><td>32.85</td><td>30.44</td><td>1.0×</td></tr><tr><td>FP32 向量</td><td>3/2</td><td>2.67</td><td>16.43</td><td>60.88</td><td>2.0×</td></tr><tr><td>FP16 向量</td><td>3/4</td><td>5.33</td><td>8.21</td><td>121.76</td><td>4.0×</td></tr><tr><td colspan="6">Kaul et al. [32]，32 nm，1.05 Va，0.045 mm2，1.45 GHz</td></tr><tr><td>FP32</td><td>标量 3/1</td><td>2.90</td><td>19.4</td><td>52.00</td><td>1.0×</td></tr><tr><td>FP20 向量</td><td>3/2</td><td>5.80</td><td>10.34</td><td>96.67</td><td>1.9×</td></tr><tr><td>FP14 向量</td><td>3/4</td><td>11.60</td><td>6.2</td><td>161.11</td><td>3.1×</td></tr><tr><td colspan="6">Pu et al. [33]，28 nm，0.8 Va，0.024§ /0.018| mm2，910§ /1360| MHz</td></tr><tr><td>FP64</td><td>标量 6/1</td><td>1.82</td><td>45.05</td><td>43.70</td><td>1.0×</td></tr><tr><td>FP32</td><td>标量 6/1</td><td>2.72</td><td>18.38</td><td>110.00</td><td>2.5×</td></tr></table>
 

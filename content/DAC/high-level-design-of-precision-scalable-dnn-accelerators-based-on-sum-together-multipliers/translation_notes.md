@@ -72,27 +72,18 @@ DNN 的量化如今已是一种常见做法，它降低神经网络层的权重�
 
 给定实数区间 $[ \alpha , \beta ]$ 中的一组实数（例如以 FP32 等高精度 FP 格式表示的张量），UIQ 将每个 $\begin{array} { r l r } { x } & { { } \in } & { [ \alpha , \beta ] } \end{array}$ 映射为在 b 位上均匀表示的整数值 $x _ { q } \in$ $[ \alpha _ { q } , \beta _ { q } ]$，其中 $[ \alpha _ { q } , \beta _ { q } ]$ 为量化后范围：对于非对称或对称的有符号整数，其分别为 $[ - 2 ^ { b - 1 } \overset { \cdot } { , } 2 ^ { b - 1 } - 1 ] \operatorname { o r } [ - \overset { \cdot } { 2 } ^ { b - 1 } - 1 , 2 ^ { \overset { \cdot } { b - 1 } } -$ 1]；对于无符号整数，其为 $[ 0 , 2 ^ { b } - 1 ]$ 。量化的过程定义为：
 
-$$
-x _ { q } = \mathrm { c l i p } \Big ( \mathrm { r o u n d } \big ( \frac { 1 } { s } x + z \big ) , \alpha _ { q } , \beta _ { q } \Big )\tag{1}
-$$
+![公式 (1)](images/equation-1.png)
 
 其中 s 为缩放因子（scaling factor），z 为零点（zero-point，即精确表示实数值零所对应的整数值），round 为舍入函数（例如 round-tonearest），clip 则通过饱和离群值将输出范围保持在量化后范围内。相应地，s 和 z 由所选的实数范围与量化后范围定义为：
 
-$$
-s = \frac { \beta - \alpha } { \beta _ { q } - \alpha _ { q } }
-$$
+![公式 (2)](images/equation-2.png)
 
-$$
-z = \mathrm { r o u n d } \big ( \frac { \beta \alpha _ { q } - \alpha \beta _ { q } } { \beta - \alpha } \big )\tag{2}
-$$
+![公式 (3)](images/equation-3.png)
 
-(3)
 
 与之相反的操作，即将 $x _ { q }$ 映射回实数范围，定义为：
 
-$$
-\hat { x } = s ( x _ { q } - z )\tag{4}
-$$
+![公式 (4)](images/equation-4.png)
 
 其中 xˆ 是与原始 x 最接近（但不一定相等）的实数值，因为舍入和截断函数可能引入不可恢复的误差。
 
@@ -102,37 +93,27 @@ $$
 
 现在考虑全连接（FC）层的表达式：
 
-$$
-Y _ { k } = b _ { k } + \sum _ { c = 1 } ^ { C } X _ { c } W _ { c , k } \qquad \forall k \in [ 1 , K ]\tag{5}
-$$
+![公式 (5)](images/equation-5.png)
 
 其中 $X \in \mathbb { R } ^ { C }$ 是神经元输入向量，$W \in \mathbb { R } ^ { K \times C }$ 是权重矩阵，$b ~ \in ~ \mathbb { R } ^ { K }$ 是偏置数组，$Y ~ \in ~ \mathbb { R } ^ { K }$ 是输出数组，C 和 K 分别是 FC 层处理的输入与输出激活的数量。对（5）中的四个实变量分别应用（4），预先设定它们各自的量化范围，并将量化输出数组 $Y _ { q , k }$ 移到等式左边，我们得到对第 k 个输出激活有效的量化 FC 表达式：
 
-$$
-\begin{array} { r } { Y _ { q , k } = \underbrace { z _ { Y } \ + \frac { s _ { b } } { s _ { Y } } ( b _ { q , k } - z _ { b } ) } _ { \mathrm { ( a ) } } + \underbrace { \frac { s _ { X } s _ { W } } { s _ { Y } } \Biggl [ \left( \displaystyle { \sum _ { c = 1 } ^ { C } { X _ { q , c } } } \ / { W _ { q , c , k } } } \right) } _ { \mathrm { ( s ) } } } \\ { - \underbrace { \left( z _ { W } \displaystyle { \sum _ { c = 1 } ^ { C } { X _ { q , c } } } \right) } _ { \mathrm { ( d ) } } - \underbrace { \left( z _ { X } \displaystyle { \sum _ { c = 1 } ^ { C } { W _ { q , c , k } } } \right) } _ { \mathrm { ( e ) } } + \underbrace { C z _ { X } z _ { W } } _ { \mathrm { ( f ) } } \Biggr ] } \\ { \forall k \in [ 1 , K ] } \end{array}\tag{6}
-$$
+![公式 (6)](images/equation-6.png)
 
-其中 $X _ { q } , W _ { q } , b _ { q } , Y _ { q }$ 是整数值；s<sub>X</sub>、s<sub>W</sub>、s<sub>b</sub>、s<sub>Y</sub> 是缩放因子；z<sub>X</sub>、z<sub>W</sub>、z<sub>b</sub>、z<sub>Y</sub> 是分别与 X、W、b、Y 相关联的零点。式（6）中的项 是整数点积，即计算的核心，而项 则引入了导致性能损失的开销。这两项都必须在线计算，因为它们依赖于 $X _ { q } ,$，而 $X _ { q }$ 只有在运行时才可知。相反，项、(e) 和 是常量，因此可以离线计算。注意，在权重采用缩放量化、激活采用仿射量化的情况下——这是文献中的常见做法 [13], [14]——z 和 $z _ { b }$ 变为零，因此项 和 也为零，同时 得到简化。这也是本文所采用的假设。式（6）的结果在被赋值给 $Y _ { q } ,$ 之前，还需经过舍入和截断，以适配 $Y _ { q }$ 期望的输出量化范围（为便于阅读，公式中未显示）。
+其中 $X _ { q } , W _ { q } , b _ { q } , Y _ { q }$ 是整数值；s<sub>X</sub>、s<sub>W</sub>、s<sub>b</sub>、s<sub>Y</sub> 是缩放因子；z<sub>X</sub>、z<sub>W</sub>、z<sub>b</sub>、z<sub>Y</sub> 是分别与 X、W、b、Y 相关联的零点。式（6）中的项 (c) 是整数点积，即计算的核心，而项 (d) 则引入了导致性能损失的开销。这两项都必须在线计算，因为它们依赖于 $X _ { q } ,$，而 $X _ { q }$ 只有在运行时才可知。相反，项 (a)、(b)、(e) 和 (f) 是常量，因此可以离线计算。注意，在权重采用缩放量化、激活采用仿射量化的情况下——这是文献中的常见做法 [13], [14]—— $z_W$ 和 $z_b$ 变为零，因此项 (d) 和 (f) 也为零，同时项 (b) 得到简化。这也是本文所采用的假设。式（6）的结果在被赋值给 $Y _ { q } ,$ 之前，还需经过舍入和截断，以适配 $Y _ { q }$ 期望的输出量化范围（为便于阅读，公式中未显示）。
 
 2D 卷积和深度可分离卷积（DW-Conv）的纯整数核的数学推导与 FC 的推导紧密类似。我们在附录 A 中给出。此后，我们将（14）、（16）和（6）称为 UIQ 公式。
 
 现在我们关注修正线性单元（ReLU）在纯整数核表达式中的融合。事实上，为了优化嵌入式设备上 DNN 的推理，一些相邻的 DNN 层通常可以合并为单层。这一操作称为层融合，通常在卷积层/全连接层与 Batch Normalization（BN）层或激活层（例如 ReLU）之间进行，并且既可以应用于浮点模型，也可以应用于量化模型。由于我们的 ST 加速器支持与 ReLU 的层融合（详见第 V-B 节），我们在此以 FC 层与其后续 ReLU 层的融合为例解释融合过程。我们选择 ReLU 是因为在 DNN 的高效硬件实现中，它是最常见的激活函数。对式（5）的浮点输出 $Y _ { k }$ 施加 ReLU 非线性，我们得到浮点 FC-ReLU 融合层的表达式：
 
-$$
-R _ { k } = { \left\{ { \begin{array} { l l } { 0 } & { { \mathrm { i f ~ } } Y _ { k } < 0 } \\ { Y _ { k } } & { { \mathrm { i f ~ } } Y _ { k } \geq 0 } \end{array} \right. } \qquad \forall k \in [ 1 , K ]\tag{7}
-$$
+![公式 (7)](images/equation-7.png)
 
 其中 $R _ { k }$ 是 ReLU 层的第 k 个输出。重复从（5）推导出（6）的相同步骤——对（7）的每个实变量应用（4），设定它们的量化范围，并将量化后的 ReLU 输出 $R _ { q , k }$ 移到等式左边——我们得到对第 k 个 ReLU 元素有效的量化 FC-ReLU 融合层：
 
-$$
-R _ { q , k } = \left\{ { \begin{array} { l l } { z _ { R } } & { { \mathrm { i f } } \ T < 0 } \\ { z _ { R } + s _ { R } \cdot T } & { { \mathrm { i f } } \ T \geq 0 } \end{array} } \right. \qquad \forall k \in [ 1 , K ]\tag{8a}
-$$
+![公式 (8a)](images/equation-8a.png)
 
 其中
 
-$$
-\begin{array} { l } { \displaystyle { T = s _ { b } ( b _ { q , k } - z _ { b } ) + s _ { X } s _ { W } \bigg [ \bigg ( \sum _ { c = 1 } ^ { C } X _ { q , c } W _ { q , c , k } \bigg ) } } \\ { \displaystyle { \phantom { \frac { C } { s } } - \left( z _ { W } \sum _ { c = 1 } ^ { C } X _ { q , c } \right) - \left( z _ { X } \sum _ { c = 1 } ^ { C } W _ { q , c , k } \right) + C z _ { X } z _ { W } \bigg ] . } } \end{array}\tag{8b}
-$$
+![公式 (8b)](images/equation-8b.png)
 
 $s _ { R }$ 和 $z _ { R }$ 是与 $R _ { q , k }$ 相关联的缩放因子和零点，而其他所有变量与式（6）中出现的变量相同。注意，$R _ { q , k }$ 需经过舍入和截断操作（为清晰起见在式（8）中未显示），以适配 ReLU 层期望的量化范围。
 
@@ -198,16 +179,10 @@ FIGURE 2. (a) 我们的 BW ST 版本 [6]：架构概览（左），PPM 重构（
 
 根据我们此前工作 [7]、[8] 的结果，我们观察到 BW ST 乘法器 [6] 在时钟频率低于 600 MHz 时具有特别出色的面积效率。而在更高频率下，图 2(a) 中紫色虚线所标示的 BW 阵列的长对角线关键路径以及最终 16 位 RCA 的进位链会导致显著的面积恶化 [8]，因为
 
-## LISTING 1. The C/C++ source code of the HLS ST multiplier.
+## 清单1：HLS ST乘法器的C/C++源代码
 
-1 #include <ac int.h>   
-3 int32 st multiplier function(uint3 CONFIG,   
-7 P = A\*B.slc<8>(0);   
-9 P = A.s1c<8>(8) \*B.s1c<8>(0) + A.s1c<8>(0) \*B.s1c<8>(8);   
-11 P = A.s1c<8>(8) \*B.s1c<4>(0) + A.s1c<8>(0) \*B.s1c<4>(8);   
-13 P = A.s1c<4>(12) \*B.s1c<4>(0) + A.s1c<4>(8) \*B.s1c<4>(4) +   
-A.s1c<4>(4) \*B.s1c<4>(8) + A.s1c<4>(0) \*B.s1c<4>(12);   
-16 P = A\*B;
+![清单1完整原始代码](images/listing-1.png)
+
 
 逻辑综合器必须推断出较大的逻辑门才能满足更严苛的时序约束。因此，在本文中，我们通过让逻辑综合器自行选择最合适的最终加法器实现方案（即在满足指定时序约束的前提下面积最小），而不是强制其使用 RCA，来解决这一问题。我们将该乘法器命名为 BW-ADD。通过这一改动，我们期望与 [6] 相比，该乘法器在高频率下的面积更小，而在低频率下保持不变。
 
@@ -271,147 +246,27 @@ TABLE 3. Sec. VII-B 的 DSE 中探索的硬件配置旋钮，包括最大 tile �
 
 表 2 的第 III 部分报告了加速器的内部缓冲区大小。这些缓冲区遵循与所使用参数相同的排序方式
 
-## LISTING 2. 我们基于 ST 的 2D-Conv 加速器的伪代码。
+## 清单2：基于ST的2D-Conv加速器伪代码
 
-```
-1 #include <ac_int.h>
-3 #pragma map_to_operator "x"
-int4 IBUF_A[IS], IBUF_B[IS], IBUF_C[IS], IBUF_D[IS],
-int4 WBUF_A[WS], WBUF_B[WS], WBUF_C[WS], WBUF_D[WS],
-ac_int<28, true> OBUF[OS],
-uint3 CONFIG, uint1 RESET) {
-if (CONFIG==(8x8 || 8x4)) { ic_lim = IC/2-1; }
-else if (CONFIG==4x4) { ic_lim = IC/4-1; }
-#praqma pipeline_init_interval 1
-for (int oh=0; oh<OH; oh++) {
-#pragma pipeline_init_interval 1
-for (int ow=0; ow<OW; ow++) {
-#pragma pipeline_init_interval 1
-for (int oc=0; oc<OC; oc++) {
-if (RESET==1) { OBUF[OC*(OH*oh+ow) +oc] = 0; }
-#pragma pipeline_init_interval 1
-for (int ic=0; ic<IC; ic++) {
-#pragma pipeline_init_interval 1
-for (int kh=0; kh<KH; kh++) {
-for (int kw=0; kw<KW; kw++) {
-int A idx = IC*(IW*(oh+kh)+(ow+kw))+ic;
-int4 A_HH = IBUF_A[A_idx];
-int4 A_HL = IBUF_B[A_idx];
-int4 A_LH = IBUF_C[A_idx];
-int4 A_LL = IBUF_D[A_idx];
-int16 A = ((A_HH<<12)&0xF000) | ((A_HL<<8)&0x0F00)I
-((A_LH<< 4)&0xOOF0) | ( ALL &OxO00F);
-#pragma unroll OC
-for (int oc=0; oc<OC; oc++) {
-int B_idx = OC*(IC*(KH*kh+kw)+ic)+oc;
-int4 B_HH = WBUF_A[B_idx];
-int4 B_HL = WBUF_B[B_idx];
-int4 B_LH = WBUF_C[B_idx];
-int4 B_LL = WBUF_D[B_idx];
-int16 B = ((B_HH<<12)&0xF000) | ((B_HL<<8)&0x0F00)I
-((B LH<< 4)&O×OOFO) | ( B LL &0x000F):
-OBUF[OC* (OH*oh+ow) +oc] += P;
-#pragma pipeline_init_interval 1
-for (int oc=0; oc<OC; oc++) {
-...
+![清单2完整原始代码](images/listing-2.png)
 
-## 清单 3. 我们基于 ST 的 DW-Conv 加速器的伪代码。
+图中注释：Memory addressing and concatenating logics 为存储寻址与拼接逻辑；Reconfigurable ST-based PSMAC array 为可重构ST乘加阵列；Quantization logic and ReLU 为量化逻辑与按需执行的ReLU。
 
-```
-3 #pragma map_to_operator "x"
-int4 IBUF_A[IS], IBUF_B[IS], IBUF_C[IS], IBUF_D[IS],
-int4 WBUF_A[WS], WBUF_B[WS], WBUF_C[WS], WBUF_D[WS],
-ac_int<28, true> OBUF[OS],
-uint3 CONFIG, uint1 RESET) {
-int k_lim,i0,i1,i2,i3,j0,j1,j2,j3;
-if (CONFIG== (8x8 || 8x4)) { k_lim = (KH*KW) /2; }
-else if (CONFIG==4x4) { k_lim = (KH*KW) /4; }
-else { k lim = (KH*KW) -1; }
-16 #pragma pipeline_init_interval 1
-for (int oh=0; oh<OH; oh++) {
-#pragma pipeline_init_interval 1
-for (int ow=0: ow<OW: ow++) {
-#pragma pipeline_init_interval 1
-for (int oc=0: oc≤oC: oc++) {
-if (RESET==1) { OBUF[OC*(OH*oh+Ow) +oc] = 0; }
-#pragma pipeline_init_interval 1
-for (int k=0; k<KH*KW; k++) {
-#pragma unroll OC
-for (int oc=0; oc<OC; oc++) {
-i0,i1,i2,i3 = LUT_i(CONFIG,k);
-j0,j1,j2,j3 = LUT_j(CONFIG,k);
-int4 A_HH = IBUF_A[OC*(IN_W* (oh+i0) + (ow+j0)) +oc];
-int4 A_HL = IBUF_B[OC*(IN_W*(oh+i1) +(ow+j1))+oc];
-int4 A_LH = IBUF_C[OC*(IN_W*(oh+i2) +(ow+j2))+oc];
-int4 A_LL = IBUF_D[OC*(IN_W*(oh+i3) +(ow+j3))+oc];
-int16 A = ((A HH<<12)&0xF000) | ((A HL<<8)&0x0F00) |
-((A LH<< 4)&Ox0OF0) | (A LL &0x000F):
-int4 B_HH = WBUF_A[OC*(KH*i3+j3)+oc];
-int4 B_HL = WBUF_B[OC*(KH*i2+j2)+oc];
-int4 B_LH = WBUF_C[OC*(KH*i1+j1)+oc];
-int4 B_LL = WBUF_D[OC*(KH*iO+j0)+oc];
-int16 B = ((B_HH<<12)&0xF000)| ((B_HL<<8)&0x0F00)|
-((B_LH<< 4)&OxOOF0) | ( B_LL &OxOOOF);
-if ((k==k_1im)&&(CONFIG==(8x8 || 8x4)||CONFIG==4x4)) {
-OBUF[OC* (OH*oh+Ow) +oc] += P;
-if (k==k lim) { break; }
-#pragma pipeline_init_interval 1
-for (int oc=0; oc<OC; oc++) {
-```
+
+
+## 清单3：基于ST的DW-Conv加速器伪代码
+
+![清单3完整原始代码](images/listing-3.png)
+
+图中注释：Memory addressing and concatenating logics 为存储寻址与拼接逻辑；Reconfigurable ST-based PSMAC array 为可重构ST乘加阵列；Quantization logic and ReLU 为量化逻辑与按需执行的ReLU。 Force two or three 4-bit chunks to zero 表示用零填充缺失元素对应的两个或三个4位块。
 
 其尺寸由第二部分中的 tile 大小决定。对于 2D-Conv 和 DW-Conv 的 IBUF 与 WBUF，我们选择能够计算 1 × 1×OC 个输出元素的最小尺寸。特别地，我们将 2D-Conv 的 IBUF 尺寸设定为可存储 4 个输入通道，以使 ST 乘法器能够在所有精度配置下工作。对于 WBUF，我们按照第一部分中的权重 tile 维度，选取卷积核维度为 7 和 5。对于 FC，我们将 IBUF 尺寸设定为可存储 128 个激活值，将 OBUF 尺寸设定为可存储 OA 个输出元素，以使其缓冲区面积与另外两个加速器相当。内部缓冲区采用双缓冲技术，以确保加速器在从全局缓冲区获取新数据时仍能不间断运行。因此，从加速器的角度来看，由全局缓冲区和内部缓冲区组成的整个存储层级表现为一个可供其透明访问的统一虚拟存储器。
 
-## 清单 4. 我们基于 ST 的 FC 加速器的伪代码（灵感来自 [6]）。
+## 清单4：基于ST的FC加速器伪代码（参考[6]）
 
-```
-1#include <ac int.h>
-3 #praqma map_to_operator "x"
-6void fc(int4 IBUF1_A[IS/2], IBUF2_A[IS/2],
-int4 IBUF1_B[IS/2], IBUF2_B[IS/2],
-int4 IBUF1_C[IS/2], IBUF2_C[IS/2],
-int4 IBUF1_D[IS/2], IBUF2_D[IS/2],
-int4 WBUF1_A[WS/2], WBUF2_A[WS/2],
-int4 WBUF1_B[WS/2], WBUF2_B[WS/2],
-int4 WBUF1_C[WS/2], WBUF2_C[WS/2],
-int4 WBUF1_D[WS/2], WBUF2_D[WS/2],
-ac_int<28, true> OBUF[OS],
-uint3 CONFIG, uint1 RESET) {
-int ia_lim;
-17 if (CONFIG==(8x8 || 8x4)) { ia_lim = IA/4-1; }
-else if (CONFIG==4x4) { ia_lim = IA/8-1; }
-else { ia_lim = IA/2-1; }
-#praqma pipeline_init_interval 1
-for (int oa=0; oa<OA; oa++) {
-if (RESET==1) { OBUF[oa] = 0; }
-#pragma pipeline_init_interval 1
-for (int ia=0; ia<IA/2; ia++) {
-int a_idx = ia;
-int4 A1_HH = IBUF1_A[a_idx], A2_HH = IBUF2_A[a_idx];
-int4 A1_HL = IBUF1_B[a_idx], A2_HL = IBUF2_B[a_idx];
-int4 A1_LH = IBUF1_C[a_idx], A2_LH = IBUF2_C[a_idx];
-int4 A1_LL = IBUF1_D[a_idx], A2_LL = IBUF2_D[a_idx];
-int16 A1 = ((A1_HH<<12)&0xF000) | ((A1_HL<<8)&0x0F00) |
-((A1_LH<< 4)&Ox00F0) | ( A1_LL &OxOOOF);
-int16 A2 = ((A2_HH<<12)&0xF000) | ((A2 HL<<8)&0x0F00)|
-((A2_LH<< 4)&Ox00F0) | ( A2_LL &OxOOOF);
-#praqma unroll OA
-for (int oa=0; oa<OA; oa++) {
-int b_idx = OA*ia+oa;
-int4 B1_HH = WBUF1_A[b_idx], B2_HH = WBUF2_A[b_idx];
-int4 B1_HL = WBUF1_B[b_idx], B2_HL = WBUF2_B[b_idx];
-int4 B1 LH = IBUF1 C[b idx], B2 LH = IBUF2 C[b idx];
-int4 B1_LL = WBUF1_D[b_idx], B2_LL = WBUF2_D[b_idx];
-int16 B1 = ((B1_HH<<12)&0xF000) | ((B1_HL<<8)&0xOF00) |
-((B1LH<< 4)&Ox00F0) | ( B1_LL &OxOOOF);
-int16 B2 = ((B2_HH<<12)&0xF000) | ((B2_HL<<8)&0x0F00)|
-((B2_LH<< 4)&Ox00F0) | ( B2_LL &Ox000F):
-int28 P2 = st_multiplier_function(CONFIG,A2,B2);
-int28 P1_plus_P2 = P1+P2;
-OBUF[oa] += P1_plus_P2;
-if (ia==ia lim) { break; }
-#praqma pipeline_init_interval 1
-58 for (int oa=0; oa<OA; oa++) {
-```
+![清单4完整原始代码](images/listing-4.png)
+
+图中注释：Memory addressing and concatenating logics 为存储寻址与拼接逻辑；Reconfigurable ST-based PSMAC array 为可重构ST乘加阵列；Quantization logic and ReLU 为量化逻辑与按需执行的ReLU。
 
 内部输入与权重缓冲区被组织为四个 4 位的存储体（memory bank），分别命名为 IBUF\_A/B/C/D 和 WBUF\_A/B/C/D，以便按照图 3 所示的存储访问模式读取低精度数据。这一点从 Lsts. 2–4 函数签名中的 int4 数据类型可以看出来。输出缓冲区被组织为 28 位的存储体，以匹配 PSMAC 阵列中累加器的位宽，这一点将在第 V-B3 节中说明。
 
@@ -480,21 +335,13 @@ C) 硬件加速器的生成。利用步骤 B) 确定的最优位宽精度，我�
 
 我们以 FC 的 UIQ 公式 (6) 为参考，其中 $z _ { W } = 0$ 且 $z _ { b } = 0 $。同样的推理也适用于其他加速器的 UIQ 公式。消融研究中考量的变量列于表 5 的列标题中。前六个是 UIQ 公式中出现的实际变量，而后三个是由 (6) 分解为 $( 9 ) \substack { - ( 1 2 ) }$ 所得到的中间结果 $\nu 1 _ { q , k } , \nu 2 _ { q , k } , \nu 3 _ { q , k }$
 
-$$
-\nu 1 _ { q , k } = \biggl [ \sum _ { c = 1 } ^ { C } X _ { q , c } W _ { q , c , k } - z _ { X } \sum _ { c = 1 } ^ { C } W _ { q , c , k } \biggr ]\tag{9}
-$$
+![公式 (9)](images/equation-9.png)
 
-$$
-\nu 2 _ { q , k } = s _ { X } s _ { W } \cdot \nu 1 _ { q , k }\tag{10}
-$$
+![公式 (10)](images/equation-10.png)
 
-$$
-\nu 3 _ { q , k } = s _ { b } b _ { q , k } + \nu 2 _ { q , k }\tag{11}
-$$
+![公式 (11)](images/equation-11.png)
 
-$$
-Y _ { q , k } = c l i p ( r o u n d ( z _ { Y } + s _ { Y } ^ { - 1 } \nu 3 _ { q , k } ) , \alpha _ { q } , \beta _ { q } )\tag{12}
-$$
+![公式 (12)](images/equation-12.png)
 
 其中 $Y _ { q , k }$ 是第 k 个输出元素，其中 $k ~ \in ~ [ 1 , K ]$ 量化为 INTy 位（$y = 1 6 , 8 .$ 或 4），在整数量化范围 $[ \alpha _ { q } , \beta _ { q } ] = [ - 2 ^ { b _ { y } - 1 } + 1 , 2 ^ { b _ { y } - 1 } - 1 ]$ 上，其余变量均为 Sec. III-A1 中与 (6) 一同引入的变量。在我们的加速器中，我们将这些变量中的每一个都实现为定点数或整数。
 
@@ -650,9 +497,7 @@ MP 量化 MLPerf Tiny 模型的执行延迟计算为各加速层（2D-Conv、DW-
 
 在本附录中，我们使用表 2 的记号。如第 III-A2 节所述，2D-Conv 和 DW-Conv 的量化内核推导方式与 FC 类似。让我们从非量化的 2D-Conv 开始：
 
-$$
-\begin{array} { l } { { Y _ { o h , o w , o c } = b _ { o c } } } \\ { { \displaystyle ~ + \left( \sum _ { i c = 1 } ^ { I C } \sum _ { k h = 1 } ^ { K H } \sum _ { k w = 1 } ^ { K W } { X _ { o h + i , o w + j , i c } \cdot W _ { k h , k w , i c , o c } } \right) } } \\ { { \displaystyle ~ \forall o h \in [ 1 , O H ] , o w ~ \in [ 1 , O W ] , o c ~ \in [ 1 , O C ] } } \end{array}\tag{13}
-$$
+![公式 (13)](images/equation-13.png)
 
 表 10. DS-CNN 的 MP 量化模型（使用 QKeras 语法，并新增了实现仿射均匀量化的 QActivation 层）。
 <table><tr><td>#</td><td>层类型</td><td>输出形状</td><td>激活/权重位数 (INT)</td><td>偏置位数 (INT)</td></tr><tr><td>0</td><td>InputLayer</td><td>49, 10, 1</td><td></td><td></td></tr><tr><td>1</td><td>QActivation</td><td>49, 10, 1</td><td>16</td><td></td></tr><tr><td>2</td><td>QConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>16</td><td>31</td></tr><tr><td>3</td><td>Dropout</td><td>25,5,64</td><td></td><td></td></tr><tr><td> $\overline { { 4 } }$ </td><td>QActivation</td><td>25,5,64</td><td>8</td><td></td></tr><tr><td>5</td><td>QDepthwiseConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>8</td><td>16</td></tr><tr><td>6</td><td>QActivation</td><td>25,5,64</td><td>8</td><td></td></tr><tr><td>7</td><td>QConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>4</td><td>31</td></tr><tr><td>8</td><td>QActivation</td><td>25,5,64</td><td>8</td><td></td></tr><tr><td>9</td><td>QDepthwiseConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>8</td><td>16</td></tr><tr><td>10</td><td>QActivation</td><td>25,5,64</td><td>8</td><td></td></tr><tr><td>11</td><td>QConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>4</td><td>16</td></tr><tr><td>12</td><td>QActivation</td><td>25,5,64</td><td>8</td><td></td></tr><tr><td>13</td><td>QDepthwiseConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>4</td><td>16</td></tr><tr><td>14</td><td>QActivation</td><td>25,5,64</td><td>4</td><td></td></tr><tr><td>15</td><td>QConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>4</td><td>16</td></tr><tr><td>16</td><td>QActivation</td><td>25,5,64</td><td>16</td><td></td></tr><tr><td>17</td><td>QDepthwiseConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>16</td><td>31</td></tr><tr><td>18</td><td>QActivation</td><td>25,5,64</td><td>4</td><td></td></tr><tr><td>19</td><td>QConv2DBatchnorm + ReLU</td><td>25,5,64</td><td>4</td><td>16</td></tr><tr><td>20</td><td>QActivation</td><td>25,5,64</td><td>4</td><td></td></tr><tr><td>21</td><td>Dropout</td><td>25,5,64</td><td></td><td></td></tr><tr><td>22</td><td>AveragePooling2D</td><td>1,1,64</td><td></td><td></td></tr><tr><td>23</td><td>QActivation</td><td>1,1,64</td><td>16</td><td></td></tr><tr><td>24</td><td>Flatten</td><td>64</td><td></td><td></td></tr><tr><td>25</td><td>QDense</td><td>12</td><td>8</td><td>31</td></tr><tr><td>26</td><td>QActivation</td><td>12</td><td>16</td><td></td></tr><tr><td>27</td><td>Softmax</td><td>12</td><td></td><td></td></tr></table>
@@ -660,21 +505,15 @@ $$
 表 11. FC-AutoEncoder 的 MP 量化模型（使用 QKeras 语法，并新增了实现仿射均匀量化的 QActivation 层）。
 <table><tr><td>#</td><td>层类型</td><td>输出形状</td><td>激活/权重位数 (INT)</td><td>偏置位数 (INT)</td></tr><tr><td>0</td><td>InputLayer</td><td>640</td><td></td><td></td></tr><tr><td>1</td><td>QActivation</td><td>640</td><td>4</td><td></td></tr><tr><td>2</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>4</td><td>16</td></tr><tr><td>3</td><td>QActivation</td><td>128</td><td>16</td><td></td></tr><tr><td>4</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>8</td><td>16</td></tr><tr><td>5</td><td>QActivation</td><td>128</td><td>8</td><td></td></tr><tr><td>6</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>4</td><td>16</td></tr><tr><td>7</td><td>QActivation</td><td>128</td><td>4</td><td></td></tr><tr><td>8</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>4</td><td>31</td></tr><tr><td>9</td><td>QActivation</td><td>128</td><td>4</td><td></td></tr><tr><td>10</td><td>QDense + BatchNormalization + ReLU</td><td>8</td><td>4</td><td>31</td></tr><tr><td>11</td><td>QActivation</td><td>8</td><td>16</td><td></td></tr><tr><td>12</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>16</td><td>16</td></tr><tr><td>13</td><td>QActivation</td><td>128</td><td>8</td><td></td></tr><tr><td>14</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>4</td><td>31</td></tr><tr><td>15</td><td>QActivation</td><td>128</td><td>8</td><td></td></tr><tr><td>16</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>8</td><td>31</td></tr><tr><td>17</td><td>QActivation</td><td>128</td><td>8</td><td></td></tr><tr><td>18</td><td>QDense + BatchNormalization + ReLU</td><td>128</td><td>8</td><td>16</td></tr><tr><td>19</td><td>QActivation</td><td>128</td><td>16</td><td></td></tr><tr><td>20</td><td>QDense</td><td>640</td><td>8</td><td>16</td></tr><tr><td>21</td><td>QActivation</td><td>640</td><td>16</td><td></td></tr></table>
 
-$X ~ \in ~ \mathbb { R } ^ { I H \times I W \times I C }$ 是输入激活张量，$W \in$ $\mathbb { R } ^ { K H \times K W \times I C }$ 是权重张量，$b \in \overset { \partial } \mathbb { R } { } ^ { O C }$ 是偏置数组，$Y \in \mathbb { R } ^ { O H \times O W \times O C }$ 是输出张量；(IH, IW) 和 (OH, OW) 分别是输入和输出张量的维度，IC
+$X ~ \in ~ \mathbb { R } ^ { I H \times I W \times I C }$ 是输入激活张量，$W \in$ $\mathbb { R } ^ { K H \times K W \times I C }$ 是权重张量，$b\in\mathbb{R}^{OC}$ 是偏置数组，$Y \in \mathbb { R } ^ { O H \times O W \times O C }$ 是输出张量；(IH, IW) 和 (OH, OW) 分别是输入和输出张量的维度，IC
 
-$$
-\begin{array} { r l } { \nabla _ { y _ { + } , \phi , z _ { + } } = } & { = \mathcal { Z } + \frac { \alpha _ { \mathrm { G } } } { \alpha _ { \mathrm { G } } } \frac { \phi _ { \mathrm { G } } } { \phi _ { \mathrm { G } } } , - 3 0 , } \\ & { \mathrm { i n } = \frac { \phi _ { \mathrm { G } } } { \pi } \frac { \phi _ { \mathrm { G } } } { \phi _ { \mathrm { G } } } } \\ & { + \frac { 3 \sigma _ { \mathrm { G } } ^ { 2 } } { \pi } \left[ \underbrace { \left( \sum _ { i = 1 } ^ { n } \sum _ { j = 1 } ^ { n } \sum _ { k = 0 } ^ { n } \lambda _ { i } \cos ( k _ { \mathrm { G } } + \Delta _ { i } \omega _ { \mathrm { G } } - k _ { \mathrm { G } } ) \cos ( k _ { \mathrm { G } } ) \cos ( k _ { \mathrm { G } } ) \right) } _ { \theta _ { \mathrm { G } } } \right] } \\ & { - \underbrace { \left( \sin \sum _ { i = 1 } ^ { n } \sum _ { j = 1 } ^ { n } \sum _ { k = 0 } ^ { n } \sum _ { k = 1 } ^ { n } \lambda _ { i } \cos ( k _ { \mathrm { G } } ) \cos ( k _ { \mathrm { G } } ) \right) } _ { \theta _ { \mathrm { G } } } } \\ & { - \underbrace { \left( \sin \sum _ { i = 1 } ^ { n } \frac { \theta _ { \mathrm { G } } } { \pi } \right) \theta _ { \mathrm { G } } \frac { \theta _ { \mathrm { G } } } { \theta _ { \mathrm { G } } } } _ { \theta _ { \mathrm { G } } } } \\ & { - \underbrace { \left( \sin \frac { \theta _ { \mathrm { G } } } { \pi } \frac { \theta _ { \mathrm { G } } } { \theta _ { \mathrm { G } } } \right) \theta _ { \mathrm { G } } } _ { \theta _ { \mathrm { G } } } } \\ & { + \underbrace { \left( \sin ^ { 2 } \alpha \sin ( k _ { \mathrm { G } } ) \cos ( k _ { \mathrm { G } } ) \right) } _ { \theta _ { \mathrm { G } } } }  \end{array}
-$$
+![公式 (14)](images/equation-14.png)
 
-$$
-\begin{array} { r l r } {  { Y _ { h , w , o c } = b _ { o c } + \bigg ( \sum _ { k h = 1 } ^ { K H } \sum _ { k w = 1 } ^ { K W } X _ { o h + k h , o w + k w , o c } \cdot W _ { k h , k w , o c } \bigg ) } } \\ & { } & { \forall o h \in [ 1 , O H ] , o w \ \in [ 1 , O W ] , o c \ \in [ 1 , O C ] } \end{array}\tag{14}
-$$
+![公式 (15)](images/equation-15.png)
 
-(15)
 
-$$
-\begin{array} { r l } { \gamma _ { n , \mathrm { e x t } , n , \mathrm { e x t } } = } & { \gamma _ { n } + \frac { \alpha _ { 1 } } { \alpha _ { 1 } } \bigg ( \mathrm { e } _ { ( 0 , n - 1 , 0 ) } \bigg ) , } \\ { \bigg ( \frac { \gamma } { n } \bigg ) } & { \bigg ( \frac { \gamma } { n } \bigg ) } \\ & { - \frac { \alpha _ { 2 } \mathrm { e x t } } { \alpha _ { 1 } } \bigg ( \displaystyle \sum _ { i = 1 , i = 1 } ^ { n } x _ { i } - \mathrm { i } \frac { \alpha _ { 1 } } { \alpha _ { 1 } } \bigg ) ( \mathrm { e } _ { i , i } \alpha _ { 1 } \bigg . \bigg . \bigg . } \\ & { \bigg . \bigg . \bigg . } \\ & { - \bigg . \bigg . \bigg ( \displaystyle \sum _ { i = 1 } ^ { n } x _ { i } \bigg ) ( \mathrm { e } _ { i , i } ^ { \alpha } ) \bigg ) , } \\ { \bigg ( \frac { \gamma } { n } \bigg ) } & { \bigg ( \mathrm { e } _ { i , i } ^ { \alpha } ) \bigg ) } \\ & { - \underbrace { \bigg ( \mathrm { e } _ { i } \alpha _ { 1 } \bigg . \bigg . \bigg . \sum _ { j = 1 } ^ { n } x _ { j + 1 , \mathrm { e x t } , \mathrm { e x t } , \mathrm { e x t } } \bigg ) } _ { \alpha _ { 1 } } } \\ &  - \underbrace { \bigg ( \mathrm { e } _ { i } \alpha _ { 1 } \bigg . \bigg . \bigg . \bigg . } \\ & { \bigg . \bigg . \bigg } \\ & { - \underbrace { \bigg ( \mathrm { e } _ { i } \alpha _ { 1 } \bigg . \bigg . \bigg . \sum _ { j = 1 } ^ { n } x _ { j + 1 , \mathrm { e x t } , \mathrm { e x t } , \mathrm { e x t } , \mathrm { e x t } , \mathrm { e x t } } \bigg ) } _ { \alpha _ { 1 } } \bigg ) } \\ & { - \underbrace { \bigg ( \mathrm { e } _ { i } \alpha _ { 1 } \bigg . \bigg . \bigg . \bigg } _ { \alpha _ { 1 } } } \end{array}\tag{16}
-$$
+
+![公式 (16)](images/equation-16.png)
 
 其中 OC 为输入和输出通道数，KH 和 KW 为卷积核维度。为了对其进行量化，我们首先对 (13) 中的每个实数变量应用 (4)。接着，设定它们各自的量化范围，并将量化后的输出数组 $Y _ { o h , o w , o c }$ 移至等式左侧，即得到如前一页顶部所示的量化 2D-Conv 表达式 (14)，该式对第 (oh, ow, oc) 个输出元素有效：
 

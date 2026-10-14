@@ -100,7 +100,7 @@ Fig. 3. 使用两种精度可扩展乘法器执行 16b  16b 乘法的示意图�
 
 分析：为了定量地考察这种架构差异的影响，我们在改变输入和权重张量精度的条件下，分析了 Bit Fusion、BitBlade 以及我们的 FlexBlock 架构在 FW、BW 和 WU 步骤上的 MAC 利用率。在分析中，我们假设 Bit Fusion 和 BitBlade 的训练变体架构在 MAC 阵列末端附接了必要的 FP32 累加器和 BFP 模块。图 5 的结果显示，在训练 MobileNetV1 [34] 时，当输入（X）和权重（W）张量均为 16 位（记作 X16W16）时，Bit Fusion 和 BitBlade 的 MAC 利用率均为 76.5%。当我们将精度降至 8 位（X8W8）时，利用率平均下降 13.8%。若进一步将精度从 8 位降至 4 位（X4W4），利用率平均再下降 22.0%。这是因为为了避免浪费计算资源，在较低精度下需要执行更多次数的累加。
 
-TABLE I  
+表 I
 FLEXBLOCK 支持的二维和三维运算示例
 <table><tr><td rowspan=1 colspan=1>模式</td><td rowspan=1 colspan=1>运算</td></tr><tr><td rowspan=1 colspan=1>2D</td><td rowspan=1 colspan=1>计算 ∂L/∂W、Depthwise Conv、Dilated Conv、Up Conv</td></tr><tr><td rowspan=1 colspan=1>3D</td><td rowspan=1 colspan=1>General Conv、Pointwise Conv、FC（前向与反向传播）</td></tr></table>
 
@@ -113,14 +113,14 @@ FLEXBLOCK 支持的二维和三维运算示例
 为了根据精度模式和层类型对硬件模块进行细粒度控制，我们将 FlexBlock 的处理核设计为层次化结构，即乘法器—处理单元—处理部件—子核（图 6）。FlexBlock 中的乘法器与 [11] 类似，可同时接受有符号和无符号操作数。使用一个全局符号位来指示输入/权重张量采用的是有符号还是无符号表示。随后，将九个乘法器聚集成簇构成一个处理单元，以高效地映射并计算 2D 卷积<sup>2</sup>。在 FlexBlock 中，输入张量 X 的子字并行性是通过一个处理部件内的四个处理单元来实现的。对于 16 位输入张量 X，每个 4 位子字（x3、x2、x1 或 x0）被映射到对应的处理单元上。然后由四个处理单元聚集成簇构成一个处理部件。注意，为了便于简单说明，图 3(b) 中的处理部件只画出了一个包含单个乘法器的处理单元。另一种针对权重张量 W 的子字并行性则是通过一个子核内的四个处理部件来实现的。对于 16 位权重张量，假设输入张量的精度为 16 位，则只有一个 4 位子字（w3）被映射到 PU3，并广播传送到该处理部件内的所有处理单元。其余三个子字，即 w2、w1 和 w0，则分别分配给其余的处理部件。
 
 ![](images/b9b616b5ce3eb5bb34941ed3222b0dbf9fde9a1cf543625b0ab3dca887629cfc.jpg)  
-Fig. 4. A motivational example explaining the rate of increase in the number of accumulations at a reduced precision: (a-c) Bit Fusion and (d-f) FlexBlock. Al accumulations within an FU in Bit Fusion need to be completed prior to passing the partial sum. However, only a subset of accumulations are completed at each PU in FlexBlock and the remaining accumulations, if required, happen at the end. In addition, FlexBlock provides a better input data reuse requiring less number of new operands.
+图4：说明低精度下累加次数增长的动机示例：（a–c）Bit Fusion；（d–f）FlexBlock。Bit Fusion 的每个FU必须完成全部累加后才能传递部分和；FlexBlock的每个PU只完成一部分累加，其余在最后按需完成。此外，FlexBlock输入复用更好，需要的新操作数更少。
 
 ![](images/d8aaa8a686a5f159c728d348d42f61343f12ab089e2a2a824ef9ed46598ddf62.jpg)  
-Fig. 5. Comparison ofthe MAC utilization during the training ofMobileNetV1 with mini-batch size of 16 using various precision-scalable MAC arrays (Bit Fusion [11], BitBlade [12] and the proposed FlexBlock).
+图5：小批大小16的MobileNetV1训练中，Bit Fusion [11]、BitBlade [12]和FlexBlock等精度可扩展MAC阵列的利用率比较。
 
-4bx4b Multiplier 9Processing Element (PE)  
+4bx4b 乘法器 9处理部件 (PE)  
 ![](images/900f5ef17cfec9bbf032a143d07b20e96c0ef62d2473e8b5ee575422f79ae8aa.jpg)  
-Fig. 6. Hierarchical structure of hardware modules in Flex-Block. Four PUs form a subcore in FlexBlock.
+图6：FlexBlock硬件模块的层次结构，四个PU组成一个子核。
 
 对于权重更新（WU）步骤，输入张量变为第 'l' 层的局部梯度，而权重张量变为第 'l 1' 层的输入特征图。
 
@@ -134,24 +134,24 @@ W 上的子字并行性：图 8 同样展示了权重参数是如何被传送到
 
 ![](images/b93ace5f04a514311ae56ec09f0e5ed52cba05eff440b173be003e9078b21333.jpg)
 
-Fig. 7. Examples on distributing input data to PEs in each PU depending on the input tensor precision (feature maps or local gradients). Inputs are broadcast to PUs in a single cycle.  
+图7：根据输入张量（特征图或局部梯度）精度，把输入分发到各PU内PE的示例。输入在一个周期内广播到PU。  
 ![](images/4dc3bd77fd17dabeadcd7a4a58f8a412fb21e7d7119b8198236e05c3cd9d37e0.jpg)  
-Fig. 8. Examples on distributing weight data to processing units in a subcore depending on the precision of the weight. In this example, 16-bit inputs are assumed (thus, a single input fmap is shared across multiple weight kernels).
+图8：按权重精度把权重分配给子核内PU的示例。假设输入16位，因此多个权重核共享一个输入特征图。
 
 ![](images/afd66c2569cd3050e03d446f55d6334c6b0c2c7f6b25fcf39de02b77fd9df4d5.jpg)
 
 ![](images/f23d0d72e3e9d7f454021095b63a040eae0c06b9f072850e3f8b4ce658149933.jpg)  
- Fig. 9. Examples of PE grouping when two operands, i.e., X and W, have different mantissa bit-widths.
+ 图9：输入X与权重W尾数位宽不同时的PE分组示例。
 
-TABLE II  
-TENSOR DIMENSIONS MAPPED TO EACH FLEXBLOCK MODULE DEPENDING ON LAYER TYPES
-<table><tr><td rowspan=1 colspan=1>FlexBlock Module</td><td rowspan=1 colspan=1>Mapped Tensor Dimension</td></tr><tr><td rowspan=1 colspan=1>Subcore</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { i n } } } }$ (Conv1/FC, Conv3), Cout (2D Mode),W/H (Conv5, Conv7)</td></tr><tr><td rowspan=1 colspan=1>Processing Unit</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { { o u t } } } } }$ (determined by the precision of weights)</td></tr><tr><td rowspan=1 colspan=1>Processing Element</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { i n } } } }$ (determined by the precision of inputs)</td></tr><tr><td rowspan=1 colspan=1>Multiplier</td><td rowspan=1 colspan=1>Cin (Conv1/FC),W/H (Conv3, Conv5, Conv7, 2D Mode)</td></tr></table>
+表 II
+不同层类型下各FlexBlock模块映射的张量维度
+<table><tr><td rowspan=1 colspan=1>FlexBlock模块</td><td rowspan=1 colspan=1>映射张量维度</td></tr><tr><td rowspan=1 colspan=1>子核</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { i n } } } }$ (Conv1/FC, Conv3), Cout (二维模式),W/H (Conv5, Conv7)</td></tr><tr><td rowspan=1 colspan=1>处理单元</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { { o u t } } } } }$ (由权重精度决定)</td></tr><tr><td rowspan=1 colspan=1>处理部件</td><td rowspan=1 colspan=1> $\overline { { \mathbf { C } _ { \mathrm { i n } } } }$ (由输入精度决定)</td></tr><tr><td rowspan=1 colspan=1>乘法器</td><td rowspan=1 colspan=1>Cin (Conv1/FC),W/H (Conv3, Conv5, Conv7, 二维模式)</td></tr></table>
 
 结合上述 X 和 W 上的子字并行性，我们可以对处理单元/处理部件进行分组，以支持输入和权重操作数的多种位宽组合。图 9(a) 展示了一个 X4W8 的示例，即将 1  2 个处理单元分为一组，每组处理每个子核 72 次 MAC 运算。图 9(b) 展示了一个 X8W16 的示例，即将 2  4 个处理单元分为一组，每组处理每个子核 18 次 MAC 运算。
 
 ## C. 层可重构性
 
-3D 操作的映射：在本小节中，我们介绍各种 DNN 层的输入/权重张量如何被映射到一个 FlexBlock 核心上。FlexBlock 中的计算模块采用分层设计，因此可以根据层类型将不同的张量维度轻松编译并映射到这些模块，如 Table II 所总结的那样。图 10 展示了 FlexBlock 在处理 Conv3 和 Conv5 层时如何对 subcore 或 PU 进行聚类的若干示例。我们在此处的图示中假设 FB16 (X8W8) 为精度级别。对于 Conv1 或 FC 层，需要累加的部分和 simply 位于维度 $C _ { i n }$ 上。因此，跨维度 $C _ { i n }$ 的输入元素和相应的权重参数被映射到 subcore、PE 和乘法器上。Subcore0 负责前 18 个输入通道 $( C _ { i n } = 0 { \sim } 1 7 )$，Subcore1 负责计算接下来的 18 个输入通道 $( C _ { i n } ~ = ~ 1 8 { \sim } 3 5 )$，依此类推。对于 Conv3 层，与 Conv1 情况的唯一区别在于操作数向乘法器的映射（图 10(a)）。映射到乘法器的维度变为 fmap 的宽度/高度 (W/H)。对于更大的权重卷积核，例如 Conv5 或 Conv7 层，我们将多个 subcore 聚类，以在 W/H 维度上分配所有大小与权重卷积核相同的输入元素（图 10(b)）。为了在各种层类型上最大化核心利用率，我们在 FlexBlock 中放置了六个 subcore，即每个核心 $9 \times 6 = 5 4$ 个 INT16 MAC。对于 Conv5 层，我们构造两个各含三个 subcore 的聚类。此时核心利用率变为 $( 5 \times 5 ) / ( 3 \times 9 ) = 0 . 9 3$（即，在三个 subcore 的 27 个 INT16 MAC 中有 $5 \times 5 = 2 5$ 个 INT16 MAC 处于活跃状态）。对于 Conv7 层，我们将全部六个 subcore 构成一个聚类，核心利用率为 $( 7 \times 7 ) / ( 6 \times 9 ) = 0 . 9 1$（即，六个 subcore 的 54 个 MAC 中有 $7 \times 7 = 4 9$ 个 MAC 被使用）。
+3D 操作的映射：在本小节中，我们介绍各种 DNN 层的输入/权重张量如何被映射到一个 FlexBlock 核心上。FlexBlock 中的计算模块采用分层设计，因此可以根据层类型将不同的张量维度轻松编译并映射到这些模块，如 Table II 所总结的那样。图 10 展示了 FlexBlock 在处理 Conv3 和 Conv5 层时如何对 subcore 或 PU 进行聚类的若干示例。我们在此处的图示中假设 FB16 (X8W8) 为精度级别。对于 Conv1 或 FC 层，需要累加的部分和位于维度 $C _ { i n }$ 上。因此，跨维度 $C _ { i n }$ 的输入元素和相应的权重参数被映射到 subcore、PE 和乘法器上。子核0 负责前 18 个输入通道 $( C _ { i n } = 0 { \sim } 1 7 )$，子核1 负责计算接下来的 18 个输入通道 $( C _ { i n } ~ = ~ 1 8 { \sim } 3 5 )$，依此类推。对于 Conv3 层，与 Conv1 情况的唯一区别在于操作数向乘法器的映射（图 10(a)）。映射到乘法器的维度变为 fmap 的宽度/高度 (W/H)。对于更大的权重卷积核，例如 Conv5 或 Conv7 层，我们将多个 subcore 聚类，以在 W/H 维度上分配所有大小与权重卷积核相同的输入元素（图 10(b)）。为了在各种层类型上最大化核心利用率，我们在 FlexBlock 中放置了六个 subcore，即每个核心 $9 \times 6 = 5 4$ 个 INT16 MAC。对于 Conv5 层，我们构造两个各含三个 subcore 的聚类。此时核心利用率变为 $( 5 \times 5 ) / ( 3 \times 9 ) = 0 . 9 3$（即，在三个 subcore 的 27 个 INT16 MAC 中有 $5 \times 5 = 2 5$ 个 INT16 MAC 处于活跃状态）。对于 Conv7 层，我们将全部六个 subcore 构成一个聚类，核心利用率为 $( 7 \times 7 ) / ( 6 \times 9 ) = 0 . 9 1$（即，六个 subcore 的 54 个 MAC 中有 $7 \times 7 = 4 9$ 个 MAC 被使用）。
 
 ![](images/170428a1503b86703e89d38add2d31affd80f05e935ec1b8803d38963096c2e5.jpg)  
 Fig. 10. FlexBlock 根据层类型对 subcore 进行分组，并为 (a) Conv3 和 (b) Conv5 层分配输入/权重张量的示例。每个 subcore 中都有专用于 'sign+mantissa' 的输入 (X) 缓冲区和权重 (W) 缓冲区。注意，对于 Conv5 层，将三个 subcore 分为一组以处理两个输入通道，从而最大化 MAC 利用率。由于 FlexBlock 中有六个 subcore，在 8-bit BFP 模式 (FB16) 下，我们可以将两个后续的输入通道映射到 subcore 3 5。
@@ -170,7 +170,7 @@ FlexBlock 的详细微架构如图 12 所示。FlexBlock 核心设计包含三�
 ![](images/9291d9b82077847ce8f97591fab9f58bb27f00a3373dbeec2d24e53aae8dea7a.jpg)  
 图 12. FlexBlock 加速器的整体微架构。共有两个归约单元，每个单元分别专用于 2D 或 3D 操作模式。我们的 FlexBlock 核心能够处理具有 8 位共享指数的各种块浮点数（例如 FB12、FB16 和 FB24）。'out\_CORE 输出至权重更新单元或批归一化（batch normalization）单元。在将数据存储到 DRAM 之前，我们在 FP2BFP 转换器处提取子张量的共享指数，用于计算下一层。
 
-TABLE III  
+表 III
 每种 FlexBlock 格式在各种层类型下共享指数的输入张量最小块大小
 <table><tr><td rowspan=1 colspan=1>层类型</td><td rowspan=1 colspan=1>格式</td><td rowspan=1 colspan=1>块大小</td><td rowspan=1 colspan=1>层类型</td><td rowspan=1 colspan=1>格式</td><td rowspan=1 colspan=1>块大小</td></tr><tr><td rowspan=3 colspan=1>CONV1/FC</td><td rowspan=1 colspan=1>FB12</td><td rowspan=1 colspan=1>1×1×216</td><td rowspan=3 colspan=1>CONV5</td><td rowspan=1 colspan=1>FB12</td><td rowspan=1 colspan=1>5×5×8</td></tr><tr><td rowspan=1 colspan=1>FB16</td><td rowspan=1 colspan=1>1×1×108</td><td rowspan=1 colspan=1>FB16</td><td rowspan=1 colspan=1>5×5×4</td></tr><tr><td rowspan=1 colspan=1>FB24</td><td rowspan=1 colspan=1>1×1×54</td><td rowspan=1 colspan=1>FB24</td><td rowspan=1 colspan=1>5×5×2</td></tr><tr><td rowspan=3 colspan=1>COVN3</td><td rowspan=1 colspan=1>FB12</td><td rowspan=1 colspan=1>3×3×24</td><td rowspan=3 colspan=1>CONV7</td><td rowspan=1 colspan=1>FB12</td><td rowspan=1 colspan=1>7×7×4</td></tr><tr><td rowspan=1 colspan=1>FB16</td><td rowspan=1 colspan=1>3×3×12</td><td rowspan=1 colspan=1>FB16</td><td rowspan=1 colspan=1>7×7×2</td></tr><tr><td rowspan=1 colspan=1>FB24</td><td rowspan=1 colspan=1>3×3×6</td><td rowspan=1 colspan=1>FB24</td><td rowspan=1 colspan=1>7×7×1</td></tr></table>
 
@@ -202,11 +202,14 @@ Fig. 13. 在 CIFAR、ImageNet 和 WMT14 数据集上不同精度格式的训练�
 
 3) BFP 变体：FB12 的精度下降归因于仅使用 4 位"符号+尾数"所带来的有限精度。请注意，所有 FlexBlock 格式均使用 8 位共享指数，即与 FP32 和 bfloat16 相同，这使得 FB12 的动态范围足以训练 DNN。正如先前工作所强调的，梯度计算过程中的精度和/或动态范围对于可靠的 DNN 训练极为重要 [5], [9], [10], [27]。因此，在使用 FB12 训练时，我们可以在 BW 步骤中将精度提升至 FB16/FB24。例如，除计算局部梯度外，所有计算均使用 4 位（记为 FB12+BW16）。在 FlexBlock 中使用 FB12+BW16 时，CIFAR 数据集上的测试精度基本上与 FP32 基线一致。如图 13 所示，使用 FB12+BW24 训练时，在 ImageNet 上训练 ResNet-18 是成功的。FB12+BW24 表示 FW 和 WU 步骤使用 FB12，而计算局部梯度（即 BW 步骤）则使用 FB24。若以 FB12+BW16 训练，与 FP32 训练的模型相比，分类精度会下降 10.84%。根据我们的分析，这是因为在 ImageNet 上训练时，局部梯度呈现出更宽的分布，需要更多的尾数位。这一系列实验表明，支持多模式 BFP 算术可以最大化 DNN 训练的效率。然而，事先很难确定针对不同基准测试的各个训练步骤应使用何种精度。为此，我们在第七章 C 节提出了一种动态精度控制方法，可自动为每个训练步骤选择逐层精度。
 
-TABLE V  
+表 V
 TPU 类脉动阵列、BitFusion 类 BFP 加速器与 FlexBlock 核心在面积、功耗和能效方面的架构对比
 <table><tr><td rowspan=1 colspan=1>训练硬件</td><td rowspan=1 colspan=1>TPU 类脉动阵列 (SA)</td><td rowspan=1 colspan=1>基于 BitFusion 的 BFP 加速器 (BF) [11]</td><td rowspan=1 colspan=1>FlexBlock 核心（本文提出；FB）</td></tr><tr><td rowspan=1 colspan=1>工艺</td><td rowspan=1 colspan=1>65nm</td><td rowspan=1 colspan=1>65nm</td><td rowspan=1 colspan=1>65nm</td></tr><tr><td rowspan=1 colspan=1>支持的精度</td><td rowspan=1 colspan=1>bfloat16</td><td rowspan=1 colspan=1>FB12, FB16, FB24</td><td rowspan=1 colspan=1>FB12,FB16,FB24</td></tr><tr><td rowspan=1 colspan=1>阵列规模</td><td rowspan=1 colspan=1>128×128</td><td rowspan=1 colspan=1>64×64 (for FB24)</td><td rowspan=1 colspan=1>54×64 (for FB24)</td></tr><tr><td rowspan=1 colspan=1>乘法器数量</td><td rowspan=1 colspan=1>128×128</td><td rowspan=1 colspan=1>256×256 (FB12) / 128×128 (FB16) / 64×64 (FB24)</td><td rowspan=1 colspan=1>216×256 (FB12) / 108×128 (FB16) / 54×64 (FB24)</td></tr><tr><td rowspan=1 colspan=1>面积 [mm²</td><td rowspan=1 colspan=1>74.38</td><td rowspan=1 colspan=1>40.22</td><td rowspan=1 colspan=1>33.82</td></tr><tr><td rowspan=1 colspan=1>功耗 [W]</td><td rowspan=1 colspan=1>9.19</td><td rowspan=1 colspan=1>17.15 (FB12) / 16.50 (FB16) / 15.47 (FB24)</td><td rowspan=1 colspan=1>8.18 (FB12) / 7.64 (FB16) / 7.25 (FB24)</td></tr><tr><td rowspan=1 colspan=1>时钟频率</td><td rowspan=1 colspan=1>333MHz</td><td rowspan=1 colspan=1>333MHz</td><td rowspan=1 colspan=1>333MHz</td></tr><tr><td rowspan=1 colspan=1>吞吐量 [TFLOPS]</td><td rowspan=1 colspan=1>1.77</td><td rowspan=1 colspan=1>2.82 (FB12) / 1.77 (FB16)0.66 (FB24)</td><td rowspan=1 colspan=1>8.78 (FB12) /3.35 (FB16) / 0.95 (FB24)</td></tr><tr><td rowspan=1 colspan=1>能效 [GFLOPS/W]</td><td rowspan=1 colspan=1>192.60</td><td rowspan=1 colspan=1>164.43 (FB12)107.27 (FB16)/ 42.66 (FB24)</td><td rowspan=1 colspan=1>1,073.30 (FB12)438.48 (FB16) / 131.03 (FB24)</td></tr></table>
 
-<table><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>面积 (μm²)</td><td rowspan=1 colspan=1>功耗 (mW)</td><td rowspan=14 colspan=1><img src="images/fd546de9bb11ccdeb4e8495e7c43f21fcadaa541aaadd71281cd3edbde9988e9.jpg"/>布局后面积：2.5 mm²</td></tr><tr><td rowspan=1 colspan=1>FlexBlock Core</td><td rowspan=1 colspan=1>528,425.89 (35.77%)</td><td rowspan=1 colspan=1>120.65 (40.82%)</td></tr><tr><td rowspan=1 colspan=1>BN Unit (FP)</td><td rowspan=1 colspan=1>128,141.44 (8.68%)</td><td rowspan=1 colspan=1>28.43 (9.62%)</td></tr><tr><td rowspan=1 colspan=1>BN Unit (BP)</td><td rowspan=1 colspan=1>201,315.20 (13.63%)</td><td rowspan=1 colspan=1>46.59 (15.76%)</td></tr><tr><td rowspan=1 colspan=1>ReLU Unit (FP)</td><td rowspan=1 colspan=1>17,061.12 (1.16%)</td><td rowspan=1 colspan=1>5.00 (1.69%)</td></tr><tr><td rowspan=1 colspan=1>Pool Unit (FP)</td><td rowspan=1 colspan=1>38,855.04 (2.63%)</td><td rowspan=1 colspan=1>1.35 (0.46%)</td></tr><tr><td rowspan=1 colspan=1>ReLU_Pool Unit (BP)</td><td rowspan=1 colspan=1>92,922.72 (6.29%)</td><td rowspan=1 colspan=1>22.73 (7.69%)</td></tr><tr><td rowspan=1 colspan=1>FIFOs</td><td rowspan=1 colspan=1>11,157.12 (0.76%)</td><td rowspan=1 colspan=1>2.24 (0.76%)</td></tr><tr><td rowspan=1 colspan=1>Masking Unit</td><td rowspan=1 colspan=1>195.84 (0.01%)</td><td rowspan=1 colspan=1>0.05 (0.02%)</td></tr><tr><td rowspan=1 colspan=1>WU Unit</td><td rowspan=1 colspan=1>126,527.68 (8.57%)</td><td rowspan=1 colspan=1>32.32 (10.93%)</td></tr><tr><td rowspan=1 colspan=1>FP2BFP Converter</td><td rowspan=1 colspan=1>11,354.88 (0.77%)</td><td rowspan=1 colspan=1>3.93 (1.33%)</td></tr><tr><td rowspan=1 colspan=1>Quantization Unit</td><td rowspan=1 colspan=1>15,895.68 (1.08%)</td><td rowspan=1 colspan=1>4.90 (1.66%)</td></tr><tr><td rowspan=1 colspan=1>Buffers per Core</td><td rowspan=1 colspan=1>305,260.31 (20.67%)</td><td rowspan=1 colspan=1>27.40 (9.27%)</td></tr><tr><td rowspan=1 colspan=1>总计</td><td rowspan=1 colspan=1>1,477,112.92</td><td rowspan=1 colspan=1>295.59</td></tr></table>
+<table><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>面积 (μm²)</td><td rowspan=1 colspan=1>功耗 (mW)</td><td rowspan=14 colspan=1>布局后面积：2.5 mm²</td></tr><tr><td rowspan=1 colspan=1>FlexBlock Core</td><td rowspan=1 colspan=1>528,425.89 (35.77%)</td><td rowspan=1 colspan=1>120.65 (40.82%)</td></tr><tr><td rowspan=1 colspan=1>BN Unit (FP)</td><td rowspan=1 colspan=1>128,141.44 (8.68%)</td><td rowspan=1 colspan=1>28.43 (9.62%)</td></tr><tr><td rowspan=1 colspan=1>BN Unit (BP)</td><td rowspan=1 colspan=1>201,315.20 (13.63%)</td><td rowspan=1 colspan=1>46.59 (15.76%)</td></tr><tr><td rowspan=1 colspan=1>ReLU Unit (FP)</td><td rowspan=1 colspan=1>17,061.12 (1.16%)</td><td rowspan=1 colspan=1>5.00 (1.69%)</td></tr><tr><td rowspan=1 colspan=1>Pool Unit (FP)</td><td rowspan=1 colspan=1>38,855.04 (2.63%)</td><td rowspan=1 colspan=1>1.35 (0.46%)</td></tr><tr><td rowspan=1 colspan=1>ReLU_Pool Unit (BP)</td><td rowspan=1 colspan=1>92,922.72 (6.29%)</td><td rowspan=1 colspan=1>22.73 (7.69%)</td></tr><tr><td rowspan=1 colspan=1>FIFOs</td><td rowspan=1 colspan=1>11,157.12 (0.76%)</td><td rowspan=1 colspan=1>2.24 (0.76%)</td></tr><tr><td rowspan=1 colspan=1>Masking Unit</td><td rowspan=1 colspan=1>195.84 (0.01%)</td><td rowspan=1 colspan=1>0.05 (0.02%)</td></tr><tr><td rowspan=1 colspan=1>WU Unit</td><td rowspan=1 colspan=1>126,527.68 (8.57%)</td><td rowspan=1 colspan=1>32.32 (10.93%)</td></tr><tr><td rowspan=1 colspan=1>FP2BFP Converter</td><td rowspan=1 colspan=1>11,354.88 (0.77%)</td><td rowspan=1 colspan=1>3.93 (1.33%)</td></tr><tr><td rowspan=1 colspan=1>Quantization Unit</td><td rowspan=1 colspan=1>15,895.68 (1.08%)</td><td rowspan=1 colspan=1>4.90 (1.66%)</td></tr><tr><td rowspan=1 colspan=1>Buffers per Core</td><td rowspan=1 colspan=1>305,260.31 (20.67%)</td><td rowspan=1 colspan=1>27.40 (9.27%)</td></tr><tr><td rowspan=1 colspan=1>总计</td><td rowspan=1 colspan=1>1,477,112.92</td><td rowspan=1 colspan=1>295.59</td></tr></table>
+
+![FlexBlock 布局后版图](images/fd546de9bb11ccdeb4e8495e7c43f21fcadaa541aaadd71281cd3edbde9988e9.jpg)
+
 
 Fig. 14. FlexBlock 核心及用于 BFP 训练的硬件模块的面积与功耗分解。
 
@@ -263,7 +266,7 @@ Fig. 18. 动态精度控制分析： FW、BW 和 WU 步骤所选 BFP 精度的�
 
 然而，为了能够在不逐一测试所有不同阈值组合（这非常耗时）的情况下应用动态精度控制，阈值取值对训练精度的敏感度应当较小。为了检验阈值对训练精度的敏感度，我们在 ResNet-18 上使用 ImageNet 进行了一组实验。改变某一种张量类型（例如激活值）的阈值，而将另外两种张量的阈值固定为默认值，即 $( t h _ { D o w n } , t h _ { U p } ) = ( 0 . 1 5 , 0 . 3 5 )$。我们允许三组阈值取值，即 (0.15, 0.35)、(0.35, 0.55) 和 (0.55, 0.75)。每个阈值下的训练精度如表 VI 所示。对于权重张量和激活值张量，即使在 (0.55, 0.75) 下精度损失也可忽略不计。然而，对于局部梯度，当分别选择 (0.35, 0.55) 和 (0.55, 0.75) 作为阈值时，训练精度分别下降了 1.65% 和 1.88%。这组实验表明，为了稳定的 DNN 训练，我们需要为局部梯度保持较低的阈值取值，而权重和激活值张量的阈值则不那么敏感（更容易设置阈值）。
 
-TABLE VI  
+表 VI
 动态精度控制阈值的敏感度测试
 <table><tr><td rowspan=1 colspan=4>其他两种张量的默认阈值：(.15, .35)</td></tr><tr><td rowspan=1 colspan=1> $\overline { { ( \mathrm { { t h } _ { D o w n } , \mathrm { { t h } _ { U p } ) } } } }$ </td><td rowspan=1 colspan=1>(.15, .35)</td><td rowspan=1 colspan=1>(.35, .55)</td><td rowspan=1 colspan=1>(.55, .75)</td></tr><tr><td rowspan=1 colspan=1>权重</td><td rowspan=1 colspan=1>67.89</td><td rowspan=1 colspan=1>67.82 (-0.07)</td><td rowspan=1 colspan=1>67.76 (-0.13)</td></tr><tr><td rowspan=1 colspan=1>激活值</td><td rowspan=1 colspan=1>67.89</td><td rowspan=1 colspan=1>67.68 (-0.21)</td><td rowspan=1 colspan=1>67.73 (-0.16)</td></tr><tr><td rowspan=1 colspan=1>局部梯度</td><td rowspan=1 colspan=1>67.89</td><td rowspan=1 colspan=1>66.24 (-1.65)</td><td rowspan=1 colspan=1>66.01 (-1.88)</td></tr></table>
 

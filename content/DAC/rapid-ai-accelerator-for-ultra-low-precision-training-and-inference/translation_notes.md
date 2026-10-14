@@ -158,11 +158,11 @@ Figure 5: 卷积数据流
 RAPID 包含一个片上功率控制模块，通过时钟边沿跳过（clock-edge skipping），使用编译器推荐的调节率来降低整体执行时间，同时在功率和热限制内运行。
 
 ![](images/58664889e3c55bae4401de6e1c7d9cb927cedc6411922b0b10ee7a8c8817f325.jpg)  
-Figure 6: Workload-Aware Power Throttling
+图6：感知工作负载的功率节流。
 
 D. 采用 2 个 corelet 的超低精度核心
 ![](images/0651006c3ac4bf15d7e053cc65464166cf76c0a33b6d6387e684aa345b9235a3.jpg)  
-Figure 7: AI core: 2 corelets and shared L1 scratchpad
+图7：AI核心由两个corelet及共享L1暂存器组成。
 
 为了最大化对 L1 便笺存储器中数据的重用，并利用超低精度带来的容量需求降低，AI 核心将两组 MPE 阵列、SFU 阵列和 L0 便笺存储器（每组称为一个 corelet）与一个共享的 2MB L1 便笺存储器相结合。如图 7 所示，共享的 L1 便笺存储器通过每个 corelet 各自独立的可编程 load/store 单元进行通信，带宽为每周期 128 字节。L1 便笺存储器 2MB 的大容量使得中间输出能够保留在片上，尤其是在超低精度推理的使用场景中。同样，从 L1 到 2 个 corelet 的带宽经过平衡，以满足不同精度下数据流的速度与带宽需求匹配。例如，在改进的权重驻留数据流下，MPE 的 INT4 计算仍然仅消耗每周期 128 字节可用 L1 带宽中的 $5 / 8 ^ { t h }$。当精度缩放到 INT2 时，每个周期都有部分和被写入 L1 便笺存储器，达到可用 L1 带宽的极限。
 

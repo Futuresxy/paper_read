@@ -41,7 +41,7 @@ Email: {stef.cuyckens, xiaoling.yi, nitish.satyamurthy, chao.fang, marian.verhel
 
 如表 I 所示，最新的 MX 标准 [18] 旨在通过在用 8 位或更少位数表示操作数时最小化精度损失，来实现高效的神经网络（NN）实现。为此，数据元素以 32 的块大小进行分组，这些元素共享一个联合缩放因子（在图 1 中记为 X）。该缩放因子本身被限制为"E8M0"格式（8 位指数、0 位尾数），这将其约束为 2 的幂。根据该标准，缩放因子被设置为块中最大的 2 的幂除以元素格式中可表示的最大 2 的幂所得的商。
 
-TABLE I
+表 I
 [18]、[19] 中规定的具体 MX 格式
 <table><tr><td>MX 名称</td><td>MXINT8</td><td colspan="2">MXFP8</td><td colspan="2">MXFP6</td><td>MXFP4</td></tr><tr><td>元素格式</td><td>INT8</td><td>E5M2</td><td>E4M3</td><td>E3M2</td><td>E2M3</td><td>E2M1</td></tr><tr><td>位数</td><td>8</td><td>8</td><td>8</td><td>6</td><td>6</td><td>4</td></tr></table>
 
@@ -138,12 +138,11 @@ Fig. 7. PE 阵列的面积与能耗/OP（乘法）分解。
 
 能耗分解表明，FP 累加加法是该架构中能耗最密集的组成部分。此外，结果显示共享指数所带来的开销可以忽略不计。
 
-TABLE III  
+表 III
 我们的方法与 DACAPO 在 MXINT8/MX9 下以及未量化的 FP32 基线的内存占用对比
 <table><tr><td rowspan="2">Batch Size</td><td rowspan="2">方法</td><td colspan="2">推理 [KB] A</td><td colspan="2">训练 [KB]</td><td rowspan="2">E (列)</td><td rowspan="2">总计 [KB]</td></tr><tr><td>W</td><td> $W ^ { T }$ </td><td> $A ^ { T }$ </td><td>E (行)</td></tr><tr><td rowspan="4">16</td><td>FP32</td><td>576.0</td><td>0.0</td><td>50.0</td><td>16.0</td><td>0.0</td><td>642.0 (1.00×)</td></tr><tr><td>Dacapo [24]</td><td>0.0 162.0 4.5</td><td>162.0</td><td>14.1</td><td>复用 A</td><td>4.5</td><td>347.1 (1.85×)</td></tr><tr><td>我们的方法</td><td>146.3</td><td>0.0</td><td>0.0 12.7</td><td>4.1</td><td>0.0</td><td>163.1 (3.94×)</td></tr><tr><td>FP32</td><td>576.0</td><td>0.0 9.0</td><td>0.0</td><td>100.0</td><td>0.0</td><td>708.0 (1.00×)</td></tr><tr><td rowspan="3">32</td><td>Dacapo [24]</td><td>162.0</td><td>162.0</td><td>28.1</td><td>32.0 复用 A</td><td>9.0</td><td>370.1 (1.91×)</td></tr><tr><td>我们的方法</td><td>146.3</td><td>0.0</td><td>25.4</td><td>8.1</td><td>0.0</td><td>179.8 (3.94×)</td></tr><tr><td>FP32</td><td>0.0 576.0</td><td>0.0</td><td>200.0</td><td>64.0</td><td>0.0</td><td>840.0 (1.00×)</td></tr><tr><td rowspan="3">64</td><td>Dacapo [24]</td><td>162.0</td><td>0.0 18.0</td><td>162.0 56.3</td><td>复用 A</td><td>18.0</td><td>416.3 (2.02×)</td></tr><tr><td>我们的方法</td><td>146.3</td><td>0.0</td><td>0.0</td><td>16.3</td><td>0.0</td><td>213.4 (3.94×)</td></tr><tr><td></td><td></td><td></td><td></td><td>50.8</td><td></td><td></td></tr></table>
 
-TABLE IV
-
+表 IV
 我们的方法与 SOTA DACAPO [24] 的全面对比
 <table><tr><td colspan="2">规格</td><td>我们的方法</td><td>Dacapo [24]</td></tr><tr><td colspan="2">频率 [MHz] 面积 [mm2]</td><td>400</td><td>400</td></tr><tr><td colspan="2"></td><td>8.92</td><td>8.52</td></tr><tr><td colspan="2">最大带宽 [GB/s]</td><td>264</td><td>512</td></tr><tr><td colspan="2">内存 [KB] MAC 数量</td><td>179.78</td><td>370.13</td></tr><tr><td colspan="2"></td><td>4096</td><td>4096</td></tr><tr><td rowspan="3">E/op [pJ]</td><td>MXINT8 vs. MX9</td><td>2.43</td><td>2.68</td></tr><tr><td>MXFP8/FP6 vs. MX6</td><td>1.92 - 2.12</td><td>1.46</td></tr><tr><td>MXFP4 vs. MX4</td><td>0.278</td><td>0.358</td></tr><tr><td colspan="2">Batch Size</td><td>32</td><td>32</td></tr><tr><td rowspan="3">训练延迟/Batch [µs]</td><td>MXINT8 vs. MX9</td><td>13.575</td><td>50.5</td></tr><tr><td>MXFP8/FP6 vs. MX6</td><td>6.03</td><td>30.7</td></tr><tr><td>MXFP4 vs. MX4</td><td>4.7625</td><td>25.75</td></tr></table>
 

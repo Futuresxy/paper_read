@@ -1,6 +1,6 @@
 ---
 title: DAC 混合精度与加速器论文
-description: 12 篇论文的研究内容与阅读入口，已上线 6 篇全文翻译及解读。
+description: 12 篇论文的研究内容与阅读入口，已上线 12 篇全文翻译及解读。
 tags:
   - paper
   - mixed-precision
@@ -9,7 +9,7 @@ tags:
 
 # DAC 混合精度与加速器论文
 
-本合集收录 DAC 目录中的 12 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 6 篇的全文翻译、技术总结、通俗讲解和图表说明，共 24 份报告。各篇研究内容见下文。
+本合集收录 DAC 目录中的 12 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 12 篇的全文翻译、技术总结、通俗讲解和图表说明，共 48 份报告。各篇研究内容见下文。
 
 全文翻译按原论文章节组织，保留公式、图片和引用；参考文献保留原文，便于检索。技术总结包含研究背景、核心机制、实验设置和结果分析。
 
@@ -23,12 +23,12 @@ tags:
 | FlexBlock | 多模式块浮点训练加速器 | [全文翻译](flexblock-a-flexible-dnn-training-accelerator-with-multi-mode-block-floating-point-support/translation_notes.md) · [技术总结](flexblock-a-flexible-dnn-training-accelerator-with-multi-mode-block-floating-point-support/paper_notes.md) · [通俗讲解](flexblock-a-flexible-dnn-training-accelerator-with-multi-mode-block-floating-point-support/ELI5_notes.md) · [图表说明](flexblock-a-flexible-dnn-training-accelerator-with-multi-mode-block-floating-point-support/figs_notes.md) |
 | Sum-Together 乘法器与高层设计 | 子字并行乘法器与 HLS 设计空间 | [全文翻译](high-level-design-of-precision-scalable-dnn-accelerators-based-on-sum-together-multipliers/translation_notes.md) · [技术总结](high-level-design-of-precision-scalable-dnn-accelerators-based-on-sum-together-multipliers/paper_notes.md) · [通俗讲解](high-level-design-of-precision-scalable-dnn-accelerators-based-on-sum-together-multipliers/ELI5_notes.md) · [图表说明](high-level-design-of-precision-scalable-dnn-accelerators-based-on-sum-together-multipliers/figs_notes.md) |
 | RaPiD | 超低精度训练与推理芯片 | [全文翻译](rapid-ai-accelerator-for-ultra-low-precision-training-and-inference/translation_notes.md) · [技术总结](rapid-ai-accelerator-for-ultra-low-precision-training-and-inference/paper_notes.md) · [通俗讲解](rapid-ai-accelerator-for-ultra-low-precision-training-and-inference/ELI5_notes.md) · [图表说明](rapid-ai-accelerator-for-ultra-low-precision-training-and-inference/figs_notes.md) |
-| 精度可扩展 MAC 架构综述与基准 | MAC 分类与统一工艺下的比较 | 报告待完成 |
-| SCALE-Sim v3 | 多核脉动阵列与存储系统仿真 | 报告待完成 |
-| SEADA | 混合精度网络与空间架构联合优化 | 报告待完成 |
-| TransDot | 跨精度点积与 FP32 累加 | 报告待完成 |
-| Voyager | DNN 加速器生成与端到端设计空间探索 | 报告待完成 |
-| XtraMAC | FPGA 上整数与浮点混合精度 MAC | 报告待完成 |
+| 精度可扩展 MAC 架构综述与基准 | MAC 分类与统一工艺下的比较 | [全文翻译](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/translation_notes.md) · [技术总结](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/paper_notes.md) · [通俗讲解](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/ELI5_notes.md) · [图表说明](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/figs_notes.md) |
+| SCALE-Sim v3 | 多核脉动阵列与存储系统仿真 | [全文翻译](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/translation_notes.md) · [技术总结](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/paper_notes.md) · [通俗讲解](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/ELI5_notes.md) · [图表说明](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/figs_notes.md) |
+| SEADA | 混合精度网络与空间架构联合优化 | [全文翻译](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/translation_notes.md) · [技术总结](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/paper_notes.md) · [通俗讲解](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/ELI5_notes.md) · [图表说明](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/figs_notes.md) |
+| TransDot | 跨精度点积与 FP32 累加 | [全文翻译](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/translation_notes.md) · [技术总结](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/paper_notes.md) · [通俗讲解](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/ELI5_notes.md) · [图表说明](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/figs_notes.md) |
+| Voyager | DNN 加速器生成与端到端设计空间探索 | [全文翻译](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md) · [技术总结](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md) · [通俗讲解](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md) · [图表说明](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md) |
+| XtraMAC | FPGA 上整数与浮点混合精度 MAC | [全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md) |
 
 ## 阅读路线
 
@@ -93,7 +93,7 @@ ISCA，2021。 [原文 DOI](https://doi.org/10.1109/ISCA52012.2021.00021)。
 
 IEEE Journal on Emerging and Selected Topics in Circuits and Systems，2019。 [原文 DOI](https://doi.org/10.1109/JETCAS.2019.2950386)。
 
-全文翻译与解读报告待完成。
+[全文翻译](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/translation_notes.md) · [技术总结](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/paper_notes.md) · [通俗讲解](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/ELI5_notes.md) · [图表说明](review-and-benchmarking-of-precision-scalable-multiply-accumulate-unit-architectures-for-embedded-neural-network-processing/figs_notes.md)
 
 ### SCALE-Sim v3
 
@@ -101,7 +101,7 @@ IEEE Journal on Emerging and Selected Topics in Circuits and Systems，2019。 [
 
 ISPASS，2025。 [原文 DOI](https://doi.org/10.1109/ISPASS64960.2025.00026)。
 
-全文翻译与解读报告待完成。
+[全文翻译](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/translation_notes.md) · [技术总结](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/paper_notes.md) · [通俗讲解](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/ELI5_notes.md) · [图表说明](scale-sim-v3-a-modular-cycle-accurate-systolic-accelerator-simulator-for-end-to-end-system-analysis/figs_notes.md)
 
 ### SEADA
 
@@ -109,7 +109,7 @@ ISPASS，2025。 [原文 DOI](https://doi.org/10.1109/ISPASS64960.2025.00026)。
 
 ArXiv，2026。 [原文预印本](https://arxiv.org/abs/2606.27884)。
 
-全文翻译与解读报告待完成。
+[全文翻译](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/translation_notes.md) · [技术总结](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/paper_notes.md) · [通俗讲解](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/ELI5_notes.md) · [图表说明](seada-an-efficient-methodology-for-optimizing-mixed-precision-dnns-on-multi-precision-spatial-architectures/figs_notes.md)
 
 ### TransDot
 
@@ -117,7 +117,7 @@ ArXiv，2026。 [原文预印本](https://arxiv.org/abs/2606.27884)。
 
 ArXiv，2026。 [原文预印本](https://arxiv.org/abs/2605.07245)。
 
-全文翻译与解读报告待完成。
+[全文翻译](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/translation_notes.md) · [技术总结](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/paper_notes.md) · [通俗讲解](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/ELI5_notes.md) · [图表说明](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/figs_notes.md)
 
 ### Voyager
 
@@ -125,7 +125,7 @@ ArXiv，2026。 [原文预印本](https://arxiv.org/abs/2605.07245)。
 
 ArXiv，2025。 [原文预印本](https://arxiv.org/abs/2509.15205)。
 
-全文翻译与解读报告待完成。
+[全文翻译](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md) · [技术总结](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md) · [通俗讲解](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md) · [图表说明](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md)
 
 ### XtraMAC
 
@@ -133,4 +133,4 @@ ArXiv，2025。 [原文预印本](https://arxiv.org/abs/2509.15205)。
 
 ISCA，2026。 [原文 DOI](https://doi.org/10.1109/ISCA66397.2026.00177)。
 
-全文翻译与解读报告待完成。
+[全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md)

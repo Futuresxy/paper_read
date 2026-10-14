@@ -1,8 +1,8 @@
 # High-Level Design of Precision-Scalable DNN Accelerators Based on Sum-Together Multipliers 图表详解
 
-### FIGURE 1. Reference ST multiplier, modified from [7]. The 16-bit inputs (A and B) are partitioned in 4-bit chunks to enable multiple operations, as defined by the 3-bit configuration input (CONFIG) and shown in Table 1. The X/· symbol indicates that the multiplier is capable of multiplication and dot-product operations, depending on the configuration.
+### 图像 1
 
-![c942a09f3a724c9aeb36856d897aa4083a20db99b12d6246ee9aa920be6802bc.jpg](images/c942a09f3a724c9aeb36856d897aa4083a20db99b12d6246ee9aa920be6802bc.jpg)
+![原论文图像 1](images/c942a09f3a724c9aeb36856d897aa4083a20db99b12d6246ee9aa920be6802bc.jpg)
 
 - **图像基本信息**
   - 图像标识：FIGURE 1，Reference ST multiplier（参考求和乘法器）
@@ -54,9 +54,9 @@
   - **MAC 操作加速**：对于 2D-Convolution 和 Fully-Connected 层，ST 特性可节省 **N-1 次 MAC 加法运算**，显著降低延迟
   - **边缘设备优化**：特别适合资源受限的边缘推理场景（Tiny ML），在保持模型精度的同时减少内存占用和能耗
 
-### (e) FIGURE 2. (a) Our version of BW ST [6]: architecture overview (left), PPM reconfiguration (right). (b) Our version of ST multiplier [17]: 16-bit high-precision multiplier (left), 8-bit and 4-bit low-precision dot-product units (middle, right). (c) Our version of D&C ST [21]: four FUs with four 4-bit BitBricks each, interconnected by shift-and-add logics. (d) Our version of ST multiplier [22]: four 8-bit Booth multipliers interconnected by muxes ending with an adder tree. (e) Radix-4 Booth ST (as in [7]): reconfiguration logic (blue), 16-bit Booth multiplier (white and gray). (f) HLS ST derived from HLS (proposed in this paper): four multipliers and three adders interconnected by a network of muxes and concatenations.
+### 图像 2
 
-![79a7894766db49c76f253071d0795a318779f16724a3c06338f2865bfd25ef8e.jpg](images/79a7894766db49c76f253071d0795a318779f16724a3c06338f2865bfd25ef8e.jpg)
+![原论文图像 2](images/79a7894766db49c76f253071d0795a318779f16724a3c06338f2865bfd25ef8e.jpg)
 
 - **整体概述**：该图展示了 **六种不同架构的 Sum-Together (ST) 乘法器**的详细电路结构对比，涵盖了 **State-of-the-Art (SoA)** 设计以及本文提出的两种新型结构。所有设计均支持 **16×16, 16×8, 8×8, 8×4, 4×4** 等多种精度配置模式。
 
@@ -120,9 +120,9 @@
     - **关键路径来源**：BW 架构受限于 **PPM 对角线链路 + RCA 进位链**；Booth 架构受益于 **Wallace 树压缩**，关键路径更短；D&C 架构受限于 **多级移位加法级联**。
     - **HLS 设计的启示**：HLS ST 能自动生成具有竞争力的架构（出现在 DSE 的 Pareto 前沿上），证明了 **高层综合在 PS 加速器设计中的可行性**，显著缩短了设计迭代周期。
 
-### FIGURE 3. Working principle of our ST-based DNN accelerators: 2D-Convolution (2D-Conv), Depth-wise Convolution (DW-Conv) and Fully-Connected (FC).
+### 图像 3
 
-![a53e42701033823b111d26c21760c7e8f9132cc71596c64983afca0e3f5625d7.jpg](images/a53e42701033823b111d26c21760c7e8f9132cc71596c64983afca0e3f5625d7.jpg)
+![原论文图像 3](images/a53e42701033823b111d26c21760c7e8f9132cc71596c64983afca0e3f5625d7.jpg)
 
 - **图表核心主题**：该图（FIGURE 3）系统性地展示了**Sum-Together (ST) 乘法器**在三种核心 DNN 层——**2D-Convolution (2D-Conv)**、**Depth-wise Convolution (DW-Conv)** 和 **Fully-Connected (FC)**——中的工作原理与数据访问模式。
 
@@ -163,9 +163,9 @@
 
 - **总结**：该图直观地论证了 ST 乘法器作为一种**可重构算子 (Reconfigurable Operator)**，能够根据 DNN 层的混合量化需求（Mixed-Precision），动态调整数据并行度，在保持硬件复用的同时，为不同类型的神经网络层提供差异化的加速策略。
 
-### FIGURE 4. General architecture of the ST-based accelerators (bottom right), HLS flow (bottom left), and pseudo-code of the high-level C/C++ description (top) that produces the general architecture.
+### 图像 4
 
-![b3bb3b133c0b738d5575c2d9feb117febfeb9119a65b4488da83116f36200545.jpg](images/b3bb3b133c0b738d5575c2d9feb117febfeb9119a65b4488da83116f36200545.jpg)
+![原论文图像 4](images/b3bb3b133c0b738d5575c2d9feb117febfeb9119a65b4488da83116f36200545.jpg)
 
 对 **FIGURE 4** 的详细分析如下：
 
@@ -254,9 +254,9 @@
 *   **数据流优化**：双缓冲和内存分区技术有效解决了边缘设备常见的“内存墙”问题，确保计算单元不会因等待数据而停顿。
 *   **灵活性**：通过改变 Hardware Configuration Knobs（如 M 值、时钟频率、ST 乘法器类型），可以从同一个高层次描述中衍生出面向**低面积（Low-Area）**、**低功耗（Low-Power）**或**低延迟（Low-Latency）**的不同 Pareto 最优硬件实现。
 
-### FIGURE 5. Accelerators design flow.
+### 图像 5
 
-![d03a34d99ccce295470e0208279338af846080e06f062b97ae212a85c91601b1.jpg](images/d03a34d99ccce295470e0208279338af846080e06f062b97ae212a85c91601b1.jpg)
+![原论文图像 5](images/d03a34d99ccce295470e0208279338af846080e06f062b97ae212a85c91601b1.jpg)
 
 对 **FIGURE 5. Accelerators design flow** 的详细分析如下：
 
@@ -321,9 +321,9 @@
 - **端到端优化**：从算法层面的量化策略到底层硬件的门级实现，实现了跨层次的联合优化。
 - **场景适应性**：最终的 DSE 结果提供了多样化的 Pareto 最优解，能够满足边缘设备对不同 PPA 指标的差异化需求。
 
-### 87988e48911353c1b0641f2293f725ce58c182af6546dd451c845cef824b4533.jpg
+### 图像 6
 
-![87988e48911353c1b0641f2293f725ce58c182af6546dd451c845cef824b4533.jpg](images/87988e48911353c1b0641f2293f725ce58c182af6546dd451c845cef824b4533.jpg)
+![原论文图像 6](images/87988e48911353c1b0641f2293f725ce58c182af6546dd451c845cef824b4533.jpg)
 
 针对该论文中 **Figure 6: DSE of the SoA and newly proposed ST multipliers** 的深入分析如下：
 
@@ -379,9 +379,9 @@
         *   **BW-ADD** 成功改善了经典BW乘法器在高频下的面积退化问题，扩展了其适用范围。
         *   **HLS ST** 证明了通过HLS快速探索和生成可行ST乘法器的可能性，虽然其绝对PPA可能未达顶尖，但大幅降低了设计门槛，且在某些点展现了意外竞争力，为自动化硬件设计流程提供了有力支持。
 
-### 5aaf3d8fd1342b677197119ca4bc34b23233ae0f3b09dd25fc9b3380e5d9eb40.jpg
+### 图像 7
 
-![5aaf3d8fd1342b677197119ca4bc34b23233ae0f3b09dd25fc9b3380e5d9eb40.jpg](images/5aaf3d8fd1342b677197119ca4bc34b23233ae0f3b09dd25fc9b3380e5d9eb40.jpg)
+![原论文图像 7](images/5aaf3d8fd1342b677197119ca4bc34b23233ae0f3b09dd25fc9b3380e5d9eb40.jpg)
 
 针对该 **Latency vs Area 设计空间探索（DSE）结果图** 的详细专业分析如下：
 
@@ -436,9 +436,9 @@
 | **HLS 设计可行性** | **HLS ST (Inline 模式)** 成功进入 DW-Conv 和 FC 的帕累托前沿，证明 **自动化的高层综合流程** 可产生媲美手工 RTL 的竞争性设计。 |
 | **实际应用建议** | 对于 **边缘设备 (TinyML)**，应优先考虑 **0.03-0.08 mm²** 区间的中低频设计（如点 A/P 附近），以平衡能效与实时性要求。 |
 
-### c21e5282c2d3da8a8f7dbf0b1e7beaed145b88484bb67d575c1175cd9ed0530a.jpg
+### 图像 8
 
-![c21e5282c2d3da8a8f7dbf0b1e7beaed145b88484bb67d575c1175cd9ed0530a.jpg](images/c21e5282c2d3da8a8f7dbf0b1e7beaed145b88484bb67d575c1175cd9ed0530a.jpg)
+![原论文图像 8](images/c21e5282c2d3da8a8f7dbf0b1e7beaed145b88484bb67d575c1175cd9ed0530a.jpg)
 
 - **图表核心信息**
     - 图表类型：**Latency vs Power (LP) 空间散点图**，展示三类 DNN 加速器（2D-Convolution、Depth-wise Convolution、Fully-Connected）的设计空间探索（DSE）结果。
@@ -499,9 +499,9 @@
     - **频率与架构的强耦合**：高频约束下（>800 MHz），逻辑综合工具更倾向于优化 **行为级描述（如 [17]）** 或 **结构规整的 Booth 架构**；而低频下，**阵列式结构（BW）** 的面积效率优势得以显现。
     - **DW-Conv 的瓶颈**：该层加速器的 Pareto 前沿整体偏右上（相对更高功耗和延迟），印证了文中关于 ST 乘法器在 DW-Conv 中存在 **硬件利用率不足**（需填充零操作数）的论断，这也是作者未来计划引入 **Sum-Apart (SA)** 乘法器的原因。
 
-### eb7208a1d82337c82cfc81280c7a26be2d5e5ebf17bd0da30ceedec999537334.jpg
+### 图像 9
 
-![eb7208a1d82337c82cfc81280c7a26be2d5e5ebf17bd0da30ceedec999537334.jpg](images/eb7208a1d82337c82cfc81280c7a26be2d5e5ebf17bd0da30ceedec999537334.jpg)
+![原论文图像 9](images/eb7208a1d82337c82cfc81280c7a26be2d5e5ebf17bd0da30ceedec999537334.jpg)
 
 针对论文中的 **Figure 9: Example of a complete DSE for 2D-Conv**（2D卷积加速器的完整设计空间探索示例图），以下是详细的专业分析：
 
@@ -549,9 +549,9 @@
     *   若追求**极致吞吐量**（如实时边缘视觉处理），则需向**右下角的暖色区域**探索，并接受相应的硅片成本和散热挑战。
     *   该图也验证了 **High-Level Synthesis (HLS)** 驱动的自动化 DSE 流程能够有效覆盖离散的手动设计盲区，为**精度可扩展 (Precision-Scalable)** 加速器的快速定制提供了坚实的量化基础。
 
-### 2008513bcf17bb5d49ff21e263ef7377a810afd5c38bd3bc83060e4691178af6.jpg
+### 图像 10
 
-![2008513bcf17bb5d49ff21e263ef7377a810afd5c38bd3bc83060e4691178af6.jpg](images/2008513bcf17bb5d49ff21e263ef7377a810afd5c38bd3bc83060e4691178af6.jpg)
+![原论文图像 10](images/2008513bcf17bb5d49ff21e263ef7377a810afd5c38bd3bc83060e4691178af6.jpg)
 
 - **图像基本信息**
   - **文件标识**: 2008513bcf17bb5d49ff21e263ef7377a810afd5c38bd3bc83060e4691178af6.jpg
@@ -599,9 +599,9 @@
   - **噪点控制**: 良好，无明显噪点
   - **专业程度**: 符合学术界标准的专业形象照要求
 
-### b9845cf4093befb742213c8a58a1d89d7ef7ea88d32db1107e5ea580a6fab92d.jpg
+### 图像 11
 
-![b9845cf4093befb742213c8a58a1d89d7ef7ea88d32db1107e5ea580a6fab92d.jpg](images/b9845cf4093befb742213c8a58a1d89d7ef7ea88d32db1107e5ea580a6fab92d.jpg)
+![原论文图像 11](images/b9845cf4093befb742213c8a58a1d89d7ef7ea88d32db1107e5ea580a6fab92d.jpg)
 
 - **图像基本信息**
   - 图像类型：**灰度/黑白学术肖像照**

@@ -1,6 +1,6 @@
 ---
 title: DAC 混合精度与加速器论文
-description: 12 篇论文的研究内容与阅读入口，已上线 12 篇全文翻译及解读。
+description: 13 篇论文的研究内容与阅读入口，已上线 13 篇全文翻译及解读。
 tags:
   - paper
   - mixed-precision
@@ -9,7 +9,7 @@ tags:
 
 # DAC 混合精度与加速器论文
 
-本合集收录 DAC 目录中的 12 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 12 篇的全文翻译、技术总结、通俗讲解和图表说明，共 48 份报告。各篇研究内容见下文。
+本合集收录 DAC 目录中的 13 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 13 篇的全文翻译、技术总结、通俗讲解和图表说明，共 52 份报告。各篇研究内容见下文。
 
 全文翻译按原论文章节组织，保留公式、图片和引用；参考文献保留原文，便于检索。技术总结包含研究背景、核心机制、实验设置和结果分析。
 
@@ -29,10 +29,11 @@ tags:
 | TransDot | 跨精度点积与 FP32 累加 | [全文翻译](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/translation_notes.md) · [技术总结](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/paper_notes.md) · [通俗讲解](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/ELI5_notes.md) · [图表说明](transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/figs_notes.md) |
 | Voyager | DNN 加速器生成与端到端设计空间探索 | [全文翻译](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md) · [技术总结](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md) · [通俗讲解](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md) · [图表说明](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md) |
 | XtraMAC | FPGA 上整数与浮点混合精度 MAC | [全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md) |
+| MixFP4 | NVFP4 逐块 E2M1/E1M2 自适应与张量核协同设计 | [全文翻译](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/translation_notes.md) · [技术总结](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/paper_notes.md) · [通俗讲解](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/ELI5_notes.md) · [图表说明](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/figs_notes.md) |
 
 ## 阅读路线
 
-- **数值格式与训练**：从 FPnew 的多格式浮点单元开始，再看 RaPiD 的低精度芯片和 FlexBlock 的块浮点训练。
+- **数值格式与训练**：从 FPnew 的多格式浮点单元开始，再看 RaPiD 的低精度芯片和 FlexBlock 的块浮点训练，最后读 MixFP4 的逐块 FP4/INT4 自适应。
 - **算术电路**：先读精度可扩展 MAC 综述，再比较 Sum-Together、TransDot、XtraMAC 与机器人学习中的 MX 硬件。
 - **系统设计**：结合 SEADA 的混合精度分配与映射、Voyager 的硬件生成以及 SCALE-Sim v3 的系统仿真。
 - **不规则工作负载**：AMPLE 展示 GNN 节点级混合精度与事件驱动调度的结合。
@@ -134,3 +135,11 @@ ArXiv，2025。 [原文预印本](https://arxiv.org/abs/2509.15205)。
 ISCA，2026。 [原文 DOI](https://doi.org/10.1109/ISCA66397.2026.00177)。
 
 [全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md)
+
+### MixFP4
+
+让每个 16 元素块在 E2M1 与 E1M2 之间按重建 MSE 选择，复用 E4M3 缩放的符号位保存格式，统一解码为内部 E2M2。实验覆盖 RTN、SmoothQuant/GPTQ/SpinQuant 及 114M/476M 预训练；计算切片面积增加 3.1%、功耗增加 1.5%，尚未测量原生内核的端到端速度。
+
+ICML 2026（PMLR 306，按论文首页），2026。[原文预印本](https://arxiv.org/abs/2605.31035)。
+
+[全文翻译](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/translation_notes.md) · [技术总结](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/paper_notes.md) · [通俗讲解](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/ELI5_notes.md) · [图表说明](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/figs_notes.md)

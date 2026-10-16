@@ -1,4 +1,4 @@
-# PDF → MinerU → GLM 翻译笔记 → Quartz → GitHub Pages
+# PDF → BlaBlaPaper 翻译笔记 → Quartz → GitHub Pages
 
 这套流水线提供两个入口：
 
@@ -32,6 +32,40 @@ MINERU_BASE_URL=https://mineru.net/api/v4
 这里沿用变量名 `OPENAI_API_KEY`，只是因为 BlaBlaPaper 使用 OpenAI-compatible 协议；实际填写的是智谱 Key。请使用智谱开放平台按量 API Key，不要使用仅限指定编程工具的 Coding Plan Key。`glm-5.3` 只处理文本且始终启用思考，`glm-5v-turbo` 用于论文图表，两者默认共用同一把 Key。
 
 `.env` 已加入 `.gitignore`。不要用 `git add -f` 提交它。
+
+### 可选：切换到 OpenAI GPT API
+
+生成器已实现 Responses 与 Chat Completions 协议，无需把 GLM 写死在工作流中。本地可将上述模型配置替换为：
+
+```ini
+model_provider=OpenAI
+model=REPLACE_WITH_YOUR_TEXT_MODEL_ID
+model_image=REPLACE_WITH_YOUR_VISION_MODEL_ID
+base_url=https://api.openai.com/v1
+wire_api=responses
+OPENAI_API_KEY=REPLACE_WITH_YOUR_OPENAI_API_KEY
+```
+
+填写账户可用的实际模型 ID；`model_image` 必须支持图片输入，可以与文本模型相同。若已配置独立的 `IMAGE_API_KEY`、`IMAGE_BASE_URL`、`IMAGE_WIRE_API`，也应同步修改或移除，让图片请求使用同一供应商。MinerU 的 PDF 解析配置独立于模型供应商。
+
+这份配置说明基于当前代码的协议支持，尚未使用用户的 OpenAI API 凭据验证。客户端目前固定发送 `temperature=0.3`，选择不支持该参数的推理模型时还需适配请求参数。标准 API 凭据通过环境变量加载，参见 [OpenAI Docs：API 认证](https://developers.openai.com/api/reference/overview#authentication)。
+
+当前 Codex 会话的登录不会自动成为本项目的 API 凭据。若希望应用使用 ChatGPT 计划额度，需要单独集成官方 [Sign in with ChatGPT](https://developers.openai.com/siwc/quickstart) 授权流程；本项目尚未实现该登录方式。不要将登录缓存中的令牌复制进 `.env`。
+
+GitHub Actions 的 `ingest-paper.yml` 同时支持 `OPENAI_API_KEY` Secret，但现有表达式优先读取 `GLM_API_KEY`。切换远程生成时应更新或移除旧的优先项，并同步调整模型、地址和协议 Variables。
+
+### 已审核内容的导入与发布
+
+直接由当前 Codex/GPT 翻译时，可继续使用 BlaBlaPaper 的分段 checkpoint 和四类报告写入器，随后运行既有导入器，而不调用 GLM。若 PDF 已本地解析为 Markdown 和图片，可使用生成器已有的目录输入路径。MixFP4 本次采用本地 PyMuPDF 提取并核对原图，避免外传 PDF；生成的报告仍进入相同的导入、Quartz 构建和 Pages 部署流程。
+
+```bash
+python scripts/import_blablapaper.py \
+  --source /path/to/reviewed/outputs/paper-slug \
+  --content-root content --collection DAC --tags paper,dac
+node quartz/bootstrap-cli.mjs build
+```
+
+导入器要求 `info.json`、四份非空报告和有效的 `images/` 引用，公开目录仍只保留报告与图片。
 
 本地运行：
 

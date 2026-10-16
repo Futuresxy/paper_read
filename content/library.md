@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 40 个论文条目、163 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 45 个论文条目、183 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -26,6 +26,11 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | TransDot: An Area-efficient Reconfigurable Floating-Point Unit for Trans-Precision Dot-Product Accumulation for FPGA AI Engines | [全文翻译](<DAC/transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/translation_notes.md>) · [技术总结](<DAC/transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/paper_notes.md>) · [通俗讲解](<DAC/transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/ELI5_notes.md>) · [图表说明](<DAC/transdot-an-area-efficient-reconfigurable-floating-point-unit-for-trans-precision-dot-product-accumulation-for-fpga-ai-engines/figs_notes.md>) |
 | Voyager: An End-to-End Framework for Design-Space Exploration and Generation of DNN Accelerators | [全文翻译](<DAC/voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md>) · [技术总结](<DAC/voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md>) · [通俗讲解](<DAC/voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md>) · [图表说明](<DAC/voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md>) |
 | XtraMAC: An Efficient MAC Architecture for Mixed-Precision LLM Inference on FPGA | [全文翻译](<DAC/xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md>) · [技术总结](<DAC/xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md>) · [通俗讲解](<DAC/xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md>) · [图表说明](<DAC/xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md>) |
+| SynGPU: Synergizing CUDA and Bit-Serial Tensor Cores for Vision Transformer Acceleration on GPU | [全文翻译](<DAC/syngpu/translation_notes.md>) · [技术总结](<DAC/syngpu/paper_notes.md>) · [通俗讲解](<DAC/syngpu/ELI5_notes.md>) · [图表说明](<DAC/syngpu/figs_notes.md>) |
+| PacQ: A SIMT Microarchitecture for Efficient Dataflow in Hyper-asymmetric GEMMs | [全文翻译](<DAC/pacq/translation_notes.md>) · [技术总结](<DAC/pacq/paper_notes.md>) · [通俗讲解](<DAC/pacq/ELI5_notes.md>) · [图表说明](<DAC/pacq/figs_notes.md>) |
+| BBAL: A Bidirectional Block Floating Point-Based Quantisation Accelerator for Large Language Models | [全文翻译](<DAC/bbal/translation_notes.md>) · [技术总结](<DAC/bbal/paper_notes.md>) · [通俗讲解](<DAC/bbal/ELI5_notes.md>) · [图表说明](<DAC/bbal/figs_notes.md>) |
+| Finding the Pareto Frontier of Low-Precision Data Formats and MAC Architecture for LLM Inference | [全文翻译](<DAC/low-precision-formats-mac-pareto/translation_notes.md>) · [技术总结](<DAC/low-precision-formats-mac-pareto/paper_notes.md>) · [通俗讲解](<DAC/low-precision-formats-mac-pareto/ELI5_notes.md>) · [图表说明](<DAC/low-precision-formats-mac-pareto/figs_notes.md>) |
+| An Algorithm-Hardware Co-design Based on Revised Microscaling Format Quantization for Accelerating Large Language Models | [全文翻译](<DAC/revised-microscaling-rmfq-rmfa/translation_notes.md>) · [技术总结](<DAC/revised-microscaling-rmfq-rmfa/paper_notes.md>) · [通俗讲解](<DAC/revised-microscaling-rmfq-rmfa/ELI5_notes.md>) · [图表说明](<DAC/revised-microscaling-rmfq-rmfa/figs_notes.md>) |
 
 ## HS-codesign
 

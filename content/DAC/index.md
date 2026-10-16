@@ -1,6 +1,6 @@
 ---
 title: DAC 混合精度与加速器论文
-description: 13 篇论文的研究内容与阅读入口，已上线 13 篇全文翻译及解读。
+description: 18 篇论文的研究内容与阅读入口，已上线 18 篇全文翻译及解读。
 tags:
   - paper
   - mixed-precision
@@ -9,7 +9,7 @@ tags:
 
 # DAC 混合精度与加速器论文
 
-本合集收录 DAC 目录中的 13 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 13 篇的全文翻译、技术总结、通俗讲解和图表说明，共 52 份报告。各篇研究内容见下文。
+本合集收录 DAC 目录中的 18 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 18 篇的全文翻译、技术总结、通俗讲解和图表说明，共 72 份报告。各篇研究内容见下文。
 
 全文翻译按原论文章节组织，保留公式、图片和引用；参考文献保留原文，便于检索。技术总结包含研究背景、核心机制、实验设置和结果分析。
 
@@ -30,6 +30,12 @@ tags:
 | Voyager | DNN 加速器生成与端到端设计空间探索 | [全文翻译](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md) · [技术总结](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md) · [通俗讲解](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md) · [图表说明](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md) |
 | XtraMAC | FPGA 上整数与浮点混合精度 MAC | [全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md) |
 | MixFP4 | NVFP4 逐块 E2M1/E1M2 自适应与张量核协同设计 | [全文翻译](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/translation_notes.md) · [技术总结](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/paper_notes.md) · [通俗讲解](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/ELI5_notes.md) · [图表说明](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/figs_notes.md) |
+
+| SynGPU | 词元差分位稀疏、寄存器数据复用与位串行 Tensor Core | [全文翻译](syngpu/translation_notes.md) · [技术总结](syngpu/paper_notes.md) · [通俗讲解](syngpu/ELI5_notes.md) · [图表说明](syngpu/figs_notes.md) |
+| PacQ | 低比特权重打包与超非对称 GEMM 的 SIMT 数据流 | [全文翻译](pacq/translation_notes.md) · [技术总结](pacq/paper_notes.md) · [通俗讲解](pacq/ELI5_notes.md) · [图表说明](pacq/figs_notes.md) |
+| BBAL | 双向块浮点量化与低精度 LLM 加速器 | [全文翻译](bbal/translation_notes.md) · [技术总结](bbal/paper_notes.md) · [通俗讲解](bbal/ELI5_notes.md) · [图表说明](bbal/figs_notes.md) |
+| Pareto | 低精度数据格式和 MAC 架构的精度、面积与能耗 Pareto 前沿 | [全文翻译](low-precision-formats-mac-pareto/translation_notes.md) · [技术总结](low-precision-formats-mac-pareto/paper_notes.md) · [通俗讲解](low-precision-formats-mac-pareto/ELI5_notes.md) · [图表说明](low-precision-formats-mac-pareto/figs_notes.md) |
+| Revised-MX | RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA | [全文翻译](revised-microscaling-rmfq-rmfa/translation_notes.md) · [技术总结](revised-microscaling-rmfq-rmfa/paper_notes.md) · [通俗讲解](revised-microscaling-rmfq-rmfa/ELI5_notes.md) · [图表说明](revised-microscaling-rmfq-rmfa/figs_notes.md) |
 
 ## 阅读路线
 
@@ -143,3 +149,37 @@ ISCA，2026。 [原文 DOI](https://doi.org/10.1109/ISCA66397.2026.00177)。
 ICML 2026（PMLR 306，按论文首页），2026。[原文预印本](https://arxiv.org/abs/2605.31035)。
 
 [全文翻译](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/translation_notes.md) · [技术总结](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/paper_notes.md) · [通俗讲解](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/ELI5_notes.md) · [图表说明](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/figs_notes.md)
+
+## DAC 2025 新增论文
+
+[本批论文目录与处理状态](dac2025.md)
+
+### SynGPU
+
+词元差分位稀疏、寄存器数据复用与位串行 Tensor Core。
+
+[全文翻译](syngpu/translation_notes.md) · [技术总结](syngpu/paper_notes.md) · [通俗讲解](syngpu/ELI5_notes.md) · [图表说明](syngpu/figs_notes.md)
+
+### PacQ
+
+低比特权重打包与超非对称 GEMM 的 SIMT 数据流。
+
+[全文翻译](pacq/translation_notes.md) · [技术总结](pacq/paper_notes.md) · [通俗讲解](pacq/ELI5_notes.md) · [图表说明](pacq/figs_notes.md)
+
+### BBAL
+
+双向块浮点量化与低精度 LLM 加速器。
+
+[全文翻译](bbal/translation_notes.md) · [技术总结](bbal/paper_notes.md) · [通俗讲解](bbal/ELI5_notes.md) · [图表说明](bbal/figs_notes.md)
+
+### Pareto
+
+低精度数据格式和 MAC 架构的精度、面积与能耗 Pareto 前沿。
+
+[全文翻译](low-precision-formats-mac-pareto/translation_notes.md) · [技术总结](low-precision-formats-mac-pareto/paper_notes.md) · [通俗讲解](low-precision-formats-mac-pareto/ELI5_notes.md) · [图表说明](low-precision-formats-mac-pareto/figs_notes.md)
+
+### Revised-MX
+
+RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA。
+
+[全文翻译](revised-microscaling-rmfq-rmfa/translation_notes.md) · [技术总结](revised-microscaling-rmfq-rmfa/paper_notes.md) · [通俗讲解](revised-microscaling-rmfq-rmfa/ELI5_notes.md) · [图表说明](revised-microscaling-rmfq-rmfa/figs_notes.md)

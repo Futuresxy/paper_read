@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 45 个论文条目、183 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 52 个论文条目、211 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -31,6 +31,13 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | BBAL: A Bidirectional Block Floating Point-Based Quantisation Accelerator for Large Language Models | [全文翻译](<DAC/bbal/translation_notes.md>) · [技术总结](<DAC/bbal/paper_notes.md>) · [通俗讲解](<DAC/bbal/ELI5_notes.md>) · [图表说明](<DAC/bbal/figs_notes.md>) |
 | Finding the Pareto Frontier of Low-Precision Data Formats and MAC Architecture for LLM Inference | [全文翻译](<DAC/low-precision-formats-mac-pareto/translation_notes.md>) · [技术总结](<DAC/low-precision-formats-mac-pareto/paper_notes.md>) · [通俗讲解](<DAC/low-precision-formats-mac-pareto/ELI5_notes.md>) · [图表说明](<DAC/low-precision-formats-mac-pareto/figs_notes.md>) |
 | An Algorithm-Hardware Co-design Based on Revised Microscaling Format Quantization for Accelerating Large Language Models | [全文翻译](<DAC/revised-microscaling-rmfq-rmfa/translation_notes.md>) · [技术总结](<DAC/revised-microscaling-rmfq-rmfa/paper_notes.md>) · [通俗讲解](<DAC/revised-microscaling-rmfq-rmfa/ELI5_notes.md>) · [图表说明](<DAC/revised-microscaling-rmfq-rmfa/figs_notes.md>) |
+| FuseDot: A Multiplication-Fused Dot Product Accelerator for Efficient LLM Inference | [全文翻译](<DAC/fusedot/translation_notes.md>) · [技术总结](<DAC/fusedot/paper_notes.md>) · [通俗讲解](<DAC/fusedot/ELI5_notes.md>) · [图表说明](<DAC/fusedot/figs_notes.md>) |
+| AMBER: A Unified Accelerator for Multi-Precision LLM Inference Exploiting Bit-Level Redundancy and Reconfigurability | [全文翻译](<DAC/amber/translation_notes.md>) · [技术总结](<DAC/amber/paper_notes.md>) · [通俗讲解](<DAC/amber/ELI5_notes.md>) · [图表说明](<DAC/amber/figs_notes.md>) |
+| CAPA: Convertibility-Aware Mixed-Precision Accelerator for Asymmetric GEMM in Weight-Only Quantized LLMs | [全文翻译](<DAC/capa/translation_notes.md>) · [技术总结](<DAC/capa/paper_notes.md>) · [通俗讲解](<DAC/capa/ELI5_notes.md>) · [图表说明](<DAC/capa/figs_notes.md>) |
+| CORE: Compact, Optimized, and Resource-Efficient Compute Engine for FP-INT GEMM Acceleration with Binary Coding Quantization | [全文翻译](<DAC/core-bcq/translation_notes.md>) · [技术总结](<DAC/core-bcq/paper_notes.md>) · [通俗讲解](<DAC/core-bcq/ELI5_notes.md>) · [图表说明](<DAC/core-bcq/figs_notes.md>) |
+| Adaptive Multiply-Accumulate Unit with Scalable Critical Path for Aggressive Voltage Underscaling DNN Accelerators | [全文翻译](<DAC/adaptive-mac-voltage-underscaling/translation_notes.md>) · [技术总结](<DAC/adaptive-mac-voltage-underscaling/paper_notes.md>) · [通俗讲解](<DAC/adaptive-mac-voltage-underscaling/ELI5_notes.md>) · [图表说明](<DAC/adaptive-mac-voltage-underscaling/figs_notes.md>) |
+| Factored Floating-Point MAC: Eliminating Redundant Normalization for Energy-Efficient Systolic Arrays | [全文翻译](<DAC/factored-floating-point-mac/translation_notes.md>) · [技术总结](<DAC/factored-floating-point-mac/paper_notes.md>) · [通俗讲解](<DAC/factored-floating-point-mac/ELI5_notes.md>) · [图表说明](<DAC/factored-floating-point-mac/figs_notes.md>) |
+| RFIPSA: A Reconfigurable FIP-based Systolic Array for Various Matrix-Intensive Workloads | [全文翻译](<DAC/rfipsa/translation_notes.md>) · [技术总结](<DAC/rfipsa/paper_notes.md>) · [通俗讲解](<DAC/rfipsa/ELI5_notes.md>) · [图表说明](<DAC/rfipsa/figs_notes.md>) |
 
 ## HS-codesign
 

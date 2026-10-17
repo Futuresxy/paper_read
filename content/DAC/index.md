@@ -1,6 +1,6 @@
 ---
 title: DAC 混合精度与加速器论文
-description: 18 篇论文的研究内容与阅读入口，已上线 18 篇全文翻译及解读。
+description: 25 篇论文的研究内容与阅读入口，已上线 25 篇全文翻译及解读。
 tags:
   - paper
   - mixed-precision
@@ -9,7 +9,7 @@ tags:
 
 # DAC 混合精度与加速器论文
 
-本合集收录 DAC 目录中的 18 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 18 篇的全文翻译、技术总结、通俗讲解和图表说明，共 72 份报告。各篇研究内容见下文。
+本合集收录 DAC 目录中的 25 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 25 篇的全文翻译、技术总结、通俗讲解和图表说明，共 100 份报告。各篇研究内容见下文。
 
 全文翻译按原论文章节组织，保留公式、图片和引用；参考文献保留原文，便于检索。技术总结包含研究背景、核心机制、实验设置和结果分析。
 
@@ -36,6 +36,14 @@ tags:
 | BBAL | 双向块浮点量化与低精度 LLM 加速器 | [全文翻译](bbal/translation_notes.md) · [技术总结](bbal/paper_notes.md) · [通俗讲解](bbal/ELI5_notes.md) · [图表说明](bbal/figs_notes.md) |
 | Pareto | 低精度数据格式和 MAC 架构的精度、面积与能耗 Pareto 前沿 | [全文翻译](low-precision-formats-mac-pareto/translation_notes.md) · [技术总结](low-precision-formats-mac-pareto/paper_notes.md) · [通俗讲解](low-precision-formats-mac-pareto/ELI5_notes.md) · [图表说明](low-precision-formats-mac-pareto/figs_notes.md) |
 | Revised-MX | RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA | [全文翻译](revised-microscaling-rmfq-rmfa/translation_notes.md) · [技术总结](revised-microscaling-rmfq-rmfa/paper_notes.md) · [通俗讲解](revised-microscaling-rmfq-rmfa/ELI5_notes.md) · [图表说明](revised-microscaling-rmfq-rmfa/figs_notes.md) |
+
+| FuseDot | 融合乘法与点积，降低仅权重量化 LLM 的计算开销 | [全文翻译](fusedot/translation_notes.md) · [技术总结](fusedot/paper_notes.md) · [通俗讲解](fusedot/ELI5_notes.md) · [图表说明](fusedot/figs_notes.md) |
+| AMBER | 利用位级冗余与可重构计算支持多精度 LLM 推理 | [全文翻译](amber/translation_notes.md) · [技术总结](amber/paper_notes.md) · [通俗讲解](amber/ELI5_notes.md) · [图表说明](amber/figs_notes.md) |
+| CAPA | 面向仅权重量化非对称 GEMM 的可转换混合精度加速器 | [全文翻译](capa/translation_notes.md) · [技术总结](capa/paper_notes.md) · [通俗讲解](capa/ELI5_notes.md) · [图表说明](capa/figs_notes.md) |
+| CORE | 利用二进制编码量化加速 FP-INT GEMM | [全文翻译](core-bcq/translation_notes.md) · [技术总结](core-bcq/paper_notes.md) · [通俗讲解](core-bcq/ELI5_notes.md) · [图表说明](core-bcq/figs_notes.md) |
+| Adaptive MAC | 通过可伸缩关键路径实现激进降压下的自适应 MAC | [全文翻译](adaptive-mac-voltage-underscaling/translation_notes.md) · [技术总结](adaptive-mac-voltage-underscaling/paper_notes.md) · [通俗讲解](adaptive-mac-voltage-underscaling/ELI5_notes.md) · [图表说明](adaptive-mac-voltage-underscaling/figs_notes.md) |
+| Factored FP MAC | 消除冗余浮点归一化，提高脉动阵列能效 | [全文翻译](factored-floating-point-mac/translation_notes.md) · [技术总结](factored-floating-point-mac/paper_notes.md) · [通俗讲解](factored-floating-point-mac/ELI5_notes.md) · [图表说明](factored-floating-point-mac/figs_notes.md) |
+| RFIPSA | 面向多类矩阵密集任务的可重构 FIP 脉动阵列 | [全文翻译](rfipsa/translation_notes.md) · [技术总结](rfipsa/paper_notes.md) · [通俗讲解](rfipsa/ELI5_notes.md) · [图表说明](rfipsa/figs_notes.md) |
 
 ## 阅读路线
 
@@ -183,3 +191,49 @@ ICML 2026（PMLR 306，按论文首页），2026。[原文预印本](https://arx
 RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA。
 
 [全文翻译](revised-microscaling-rmfq-rmfa/translation_notes.md) · [技术总结](revised-microscaling-rmfq-rmfa/paper_notes.md) · [通俗讲解](revised-microscaling-rmfq-rmfa/ELI5_notes.md) · [图表说明](revised-microscaling-rmfq-rmfa/figs_notes.md)
+
+## DAC 2026 新增论文
+
+[本批七篇论文的完整目录](dac2026.md)
+
+### FuseDot
+
+融合乘法与点积，降低仅权重量化 LLM 的计算开销。
+
+[全文翻译](fusedot/translation_notes.md) · [技术总结](fusedot/paper_notes.md) · [通俗讲解](fusedot/ELI5_notes.md) · [图表说明](fusedot/figs_notes.md)
+
+### AMBER
+
+利用位级冗余与可重构计算支持多精度 LLM 推理。
+
+[全文翻译](amber/translation_notes.md) · [技术总结](amber/paper_notes.md) · [通俗讲解](amber/ELI5_notes.md) · [图表说明](amber/figs_notes.md)
+
+### CAPA
+
+面向仅权重量化非对称 GEMM 的可转换混合精度加速器。
+
+[全文翻译](capa/translation_notes.md) · [技术总结](capa/paper_notes.md) · [通俗讲解](capa/ELI5_notes.md) · [图表说明](capa/figs_notes.md)
+
+### CORE
+
+利用二进制编码量化加速 FP-INT GEMM。
+
+[全文翻译](core-bcq/translation_notes.md) · [技术总结](core-bcq/paper_notes.md) · [通俗讲解](core-bcq/ELI5_notes.md) · [图表说明](core-bcq/figs_notes.md)
+
+### Adaptive MAC
+
+通过可伸缩关键路径实现激进降压下的自适应 MAC。
+
+[全文翻译](adaptive-mac-voltage-underscaling/translation_notes.md) · [技术总结](adaptive-mac-voltage-underscaling/paper_notes.md) · [通俗讲解](adaptive-mac-voltage-underscaling/ELI5_notes.md) · [图表说明](adaptive-mac-voltage-underscaling/figs_notes.md)
+
+### Factored FP MAC
+
+消除冗余浮点归一化，提高脉动阵列能效。
+
+[全文翻译](factored-floating-point-mac/translation_notes.md) · [技术总结](factored-floating-point-mac/paper_notes.md) · [通俗讲解](factored-floating-point-mac/ELI5_notes.md) · [图表说明](factored-floating-point-mac/figs_notes.md)
+
+### RFIPSA
+
+面向多类矩阵密集任务的可重构 FIP 脉动阵列。
+
+[全文翻译](rfipsa/translation_notes.md) · [技术总结](rfipsa/paper_notes.md) · [通俗讲解](rfipsa/ELI5_notes.md) · [图表说明](rfipsa/figs_notes.md)

@@ -1,6 +1,6 @@
 ---
 title: DAC 混合精度与加速器论文
-description: 25 篇论文的研究内容与阅读入口，已上线 25 篇全文翻译及解读。
+description: 27 篇论文的研究内容与阅读入口，已上线 27 篇全文翻译及解读。
 tags:
   - paper
   - mixed-precision
@@ -9,7 +9,7 @@ tags:
 
 # DAC 混合精度与加速器论文
 
-本合集收录 DAC 目录中的 25 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、加速器生成和系统仿真。目前已上线 25 篇的全文翻译、技术总结、通俗讲解和图表说明，共 100 份报告。各篇研究内容见下文。
+本合集收录 DAC 目录中的 27 篇论文，覆盖精度可扩展算术电路、低精度训练与推理、扩散模型、加速器生成和系统仿真。目前已上线 27 篇的全文翻译、技术总结、通俗讲解和图表说明，共 108 份报告。各篇研究内容见下文。
 
 全文翻译按原论文章节组织，保留公式、图片和引用；参考文献保留原文，便于检索。技术总结包含研究背景、核心机制、实验设置和结果分析。
 
@@ -30,13 +30,11 @@ tags:
 | Voyager | DNN 加速器生成与端到端设计空间探索 | [全文翻译](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/translation_notes.md) · [技术总结](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/paper_notes.md) · [通俗讲解](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/ELI5_notes.md) · [图表说明](voyager-an-end-to-end-framework-for-design-space-exploration-and-generation-of-dnn-accelerators/figs_notes.md) |
 | XtraMAC | FPGA 上整数与浮点混合精度 MAC | [全文翻译](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/translation_notes.md) · [技术总结](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/paper_notes.md) · [通俗讲解](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/ELI5_notes.md) · [图表说明](xtramac-an-efficient-mac-architecture-for-mixed-precision-llm-inference-on-fpga/figs_notes.md) |
 | MixFP4 | NVFP4 逐块 E2M1/E1M2 自适应与张量核协同设计 | [全文翻译](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/translation_notes.md) · [技术总结](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/paper_notes.md) · [通俗讲解](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/ELI5_notes.md) · [图表说明](mixfp4-enhancing-nvfp4-with-adaptive-fp4-int4-block-representations/figs_notes.md) |
-
 | SynGPU | 词元差分位稀疏、寄存器数据复用与位串行 Tensor Core | [全文翻译](syngpu/translation_notes.md) · [技术总结](syngpu/paper_notes.md) · [通俗讲解](syngpu/ELI5_notes.md) · [图表说明](syngpu/figs_notes.md) |
 | PacQ | 低比特权重打包与超非对称 GEMM 的 SIMT 数据流 | [全文翻译](pacq/translation_notes.md) · [技术总结](pacq/paper_notes.md) · [通俗讲解](pacq/ELI5_notes.md) · [图表说明](pacq/figs_notes.md) |
 | BBAL | 双向块浮点量化与低精度 LLM 加速器 | [全文翻译](bbal/translation_notes.md) · [技术总结](bbal/paper_notes.md) · [通俗讲解](bbal/ELI5_notes.md) · [图表说明](bbal/figs_notes.md) |
 | Pareto | 低精度数据格式和 MAC 架构的精度、面积与能耗 Pareto 前沿 | [全文翻译](low-precision-formats-mac-pareto/translation_notes.md) · [技术总结](low-precision-formats-mac-pareto/paper_notes.md) · [通俗讲解](low-precision-formats-mac-pareto/ELI5_notes.md) · [图表说明](low-precision-formats-mac-pareto/figs_notes.md) |
 | Revised-MX | RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA | [全文翻译](revised-microscaling-rmfq-rmfa/translation_notes.md) · [技术总结](revised-microscaling-rmfq-rmfa/paper_notes.md) · [通俗讲解](revised-microscaling-rmfq-rmfa/ELI5_notes.md) · [图表说明](revised-microscaling-rmfq-rmfa/figs_notes.md) |
-
 | FuseDot | 融合乘法与点积，降低仅权重量化 LLM 的计算开销 | [全文翻译](fusedot/translation_notes.md) · [技术总结](fusedot/paper_notes.md) · [通俗讲解](fusedot/ELI5_notes.md) · [图表说明](fusedot/figs_notes.md) |
 | AMBER | 利用位级冗余与可重构计算支持多精度 LLM 推理 | [全文翻译](amber/translation_notes.md) · [技术总结](amber/paper_notes.md) · [通俗讲解](amber/ELI5_notes.md) · [图表说明](amber/figs_notes.md) |
 | CAPA | 面向仅权重量化非对称 GEMM 的可转换混合精度加速器 | [全文翻译](capa/translation_notes.md) · [技术总结](capa/paper_notes.md) · [通俗讲解](capa/ELI5_notes.md) · [图表说明](capa/figs_notes.md) |
@@ -44,11 +42,13 @@ tags:
 | Adaptive MAC | 通过可伸缩关键路径实现激进降压下的自适应 MAC | [全文翻译](adaptive-mac-voltage-underscaling/translation_notes.md) · [技术总结](adaptive-mac-voltage-underscaling/paper_notes.md) · [通俗讲解](adaptive-mac-voltage-underscaling/ELI5_notes.md) · [图表说明](adaptive-mac-voltage-underscaling/figs_notes.md) |
 | Factored FP MAC | 消除冗余浮点归一化，提高脉动阵列能效 | [全文翻译](factored-floating-point-mac/translation_notes.md) · [技术总结](factored-floating-point-mac/paper_notes.md) · [通俗讲解](factored-floating-point-mac/ELI5_notes.md) · [图表说明](factored-floating-point-mac/figs_notes.md) |
 | RFIPSA | 面向多类矩阵密集任务的可重构 FIP 脉动阵列 | [全文翻译](rfipsa/translation_notes.md) · [技术总结](rfipsa/paper_notes.md) · [通俗讲解](rfipsa/ELI5_notes.md) · [图表说明](rfipsa/figs_notes.md) |
+| PSMA 分类与基准 | 通过新增位组循环统一描述精度可扩展 MAC 阵列，以 72 种 28nm 阵列配置比较移位逻辑、加法树和寄存器的共享、带宽与能效取舍。 | [全文翻译](psma-taxonomy-benchmark/translation_notes.md) · [技术总结](psma-taxonomy-benchmark/paper_notes.md) · [通俗讲解](psma-taxonomy-benchmark/ELI5_notes.md) · [图表说明](psma-taxonomy-benchmark/figs_notes.md) |
+| MASQ | 面向掩码扩散，以空间感受野、注意力关联和去噪阶段控制 MXINT8/4/2 精度，并通过位串行计算引擎与掩码管理器协同执行。 | [全文翻译](masq/translation_notes.md) · [技术总结](masq/paper_notes.md) · [通俗讲解](masq/ELI5_notes.md) · [图表说明](masq/figs_notes.md) |
 
 ## 阅读路线
 
 - **数值格式与训练**：从 FPnew 的多格式浮点单元开始，再看 RaPiD 的低精度芯片和 FlexBlock 的块浮点训练，最后读 MixFP4 的逐块 FP4/INT4 自适应。
-- **算术电路**：先读精度可扩展 MAC 综述，再比较 Sum-Together、TransDot、XtraMAC 与机器人学习中的 MX 硬件。
+- **算术电路与计算单元复用**：先读精度可扩展 MAC 单元综述，再读 PSMA 分类与基准中的位组循环、移位与寄存器共享，随后比较 Sum-Together、TransDot、XtraMAC 与机器人学习中的 MX 硬件。
 - **系统设计**：结合 SEADA 的混合精度分配与映射、Voyager 的硬件生成以及 SCALE-Sim v3 的系统仿真。
 - **不规则工作负载**：AMPLE 展示 GNN 节点级混合精度与事件驱动调度的结合。
 
@@ -194,7 +194,7 @@ RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA。
 
 ## DAC 2026 新增论文
 
-[本批七篇论文的完整目录](dac2026.md)
+[DAC 2026 八篇论文的完整目录](dac2026.md)
 
 ### FuseDot
 
@@ -237,3 +237,17 @@ RMX 格式、两级量化 RMFQ 与自适应脉动阵列 RMFA。
 面向多类矩阵密集任务的可重构 FIP 脉动阵列。
 
 [全文翻译](rfipsa/translation_notes.md) · [技术总结](rfipsa/paper_notes.md) · [通俗讲解](rfipsa/ELI5_notes.md) · [图表说明](rfipsa/figs_notes.md)
+
+### MASQ
+
+面向掩码扩散，以空间感受野、注意力关联和去噪阶段控制 MXINT8/4/2 精度，并通过位串行计算引擎与掩码管理器协同执行。该篇为 DAC 2026 论文；综合与周期模拟评估显示，相对 A100/Orin NX 最高分别加速 16.06×/5.39×，质量总体接近 FP16。
+
+[全文翻译](masq/translation_notes.md) · [技术总结](masq/paper_notes.md) · [通俗讲解](masq/ELI5_notes.md) · [图表说明](masq/figs_notes.md)
+
+## 计算单元复用与阵列数据流
+
+### PSMA 分类与基准
+
+通过新增位组循环统一描述精度可扩展 MAC 阵列，以 72 种 28nm 阵列配置比较移位逻辑、加法树和寄存器的共享、带宽与能效取舍。从 CNN 七重循环扩展为九重循环，将已有精度伸缩架构映射到同一体系，说明阵列级开销摊销会改变单 MAC 层面的结论。原文版本为 arXiv:2108.04773v2，2022-01-17；该篇作为计算单元复用相关研究收录。
+
+[全文翻译](psma-taxonomy-benchmark/translation_notes.md) · [技术总结](psma-taxonomy-benchmark/paper_notes.md) · [通俗讲解](psma-taxonomy-benchmark/ELI5_notes.md) · [图表说明](psma-taxonomy-benchmark/figs_notes.md)

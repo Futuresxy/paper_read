@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 52 个论文条目、211 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 54 个论文条目、219 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -38,6 +38,8 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | Adaptive Multiply-Accumulate Unit with Scalable Critical Path for Aggressive Voltage Underscaling DNN Accelerators | [全文翻译](<DAC/adaptive-mac-voltage-underscaling/translation_notes.md>) · [技术总结](<DAC/adaptive-mac-voltage-underscaling/paper_notes.md>) · [通俗讲解](<DAC/adaptive-mac-voltage-underscaling/ELI5_notes.md>) · [图表说明](<DAC/adaptive-mac-voltage-underscaling/figs_notes.md>) |
 | Factored Floating-Point MAC: Eliminating Redundant Normalization for Energy-Efficient Systolic Arrays | [全文翻译](<DAC/factored-floating-point-mac/translation_notes.md>) · [技术总结](<DAC/factored-floating-point-mac/paper_notes.md>) · [通俗讲解](<DAC/factored-floating-point-mac/ELI5_notes.md>) · [图表说明](<DAC/factored-floating-point-mac/figs_notes.md>) |
 | RFIPSA: A Reconfigurable FIP-based Systolic Array for Various Matrix-Intensive Workloads | [全文翻译](<DAC/rfipsa/translation_notes.md>) · [技术总结](<DAC/rfipsa/paper_notes.md>) · [通俗讲解](<DAC/rfipsa/ELI5_notes.md>) · [图表说明](<DAC/rfipsa/figs_notes.md>) |
+| Taxonomy and Benchmarking of Precision-Scalable MAC Arrays under Enhanced DNN Dataflow Representation | [全文翻译](<DAC/psma-taxonomy-benchmark/translation_notes.md>) · [技术总结](<DAC/psma-taxonomy-benchmark/paper_notes.md>) · [通俗讲解](<DAC/psma-taxonomy-benchmark/ELI5_notes.md>) · [图表说明](<DAC/psma-taxonomy-benchmark/figs_notes.md>) |
+| MASQ: Accelerating Masked Diffusion via Stage-Wise Multi-Precision Quantization | [全文翻译](<DAC/masq/translation_notes.md>) · [技术总结](<DAC/masq/paper_notes.md>) · [通俗讲解](<DAC/masq/ELI5_notes.md>) · [图表说明](<DAC/masq/figs_notes.md>) |
 
 ## HS-codesign
 

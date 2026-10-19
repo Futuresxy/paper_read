@@ -27,3 +27,7 @@ title: Paper Notes
 ## DAC 2026 新增论文
 
 [阅读 FuseDot、AMBER、CAPA、CORE、自适应降压 MAC、Factored FP MAC、RFIPSA、MASQ 的 32 份中文报告](DAC/dac2026.md)。
+
+## HPCA：FIGNA 与 BitMoD
+
+[阅读两篇论文的全文翻译、技术总结、通俗讲解与图表说明](HPCA/index.md)。FIGNA 为 HPCA 2024，BitMoD 为 HPCA 2025；翻译使用 Codex/GPT。

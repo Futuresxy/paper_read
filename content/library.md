@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 54 个论文条目、219 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 56 个论文条目、227 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -92,3 +92,10 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | 论文 | 已有报告 |
 | --- | --- |
 | Redwood: A Frontier AI Accelerator Designed, Verified, and Deployed from Scratch in 2 Weeks by AI | [全文翻译](<misc/redwood-a-frontier-ai-accelerator-designed-verified-and-deployed-from-scratch-in-2-weeks-by-ai/translation_notes.md>) · [技术总结](<misc/redwood-a-frontier-ai-accelerator-designed-verified-and-deployed-from-scratch-in-2-weeks-by-ai/paper_notes.md>) · [通俗讲解](<misc/redwood-a-frontier-ai-accelerator-designed-verified-and-deployed-from-scratch-in-2-weeks-by-ai/ELI5_notes.md>) · [图表说明](<misc/redwood-a-frontier-ai-accelerator-designed-verified-and-deployed-from-scratch-in-2-weeks-by-ai/figs_notes.md>) |
+
+## HPCA
+
+| 论文 | 已有报告 |
+| --- | --- |
+| BitMoD: Bit-serial Mixture-of-Datatype LLM Acceleration | [全文翻译](<HPCA/bitmod/translation_notes.md>) · [技术总结](<HPCA/bitmod/paper_notes.md>) · [通俗讲解](<HPCA/bitmod/ELI5_notes.md>) · [图表说明](<HPCA/bitmod/figs_notes.md>) |
+| FIGNA: Integer Unit-Based Accelerator Design for FP-INT GEMM Preserving Numerical Accuracy | [全文翻译](<HPCA/figna/translation_notes.md>) · [技术总结](<HPCA/figna/paper_notes.md>) · [通俗讲解](<HPCA/figna/ELI5_notes.md>) · [图表说明](<HPCA/figna/figs_notes.md>) |

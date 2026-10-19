@@ -89,3 +89,9 @@ Rethinking Floating Point Overheads for Mixed Precision DNN Accelerators
 先看 BitFusion 的整数位级组合，再看 Rethinking 的浮点对齐代价；Low-Cost MU、Jack Unit 和三星 NPU 展示不同共享边界；Fused FP8 DOT4、MXDOTP、MPICC 分别讨论融合点积、缩放与指令集供数、随机舍入及混合类型。数值格式、舍入和实现范围需分开核查，不能仅凭支持位宽计算可比吞吐。
 
 [全部论文](../library.md) · [FIGNA / BitMoD](../HPCA/index.md) · [DAC 研究合集](../DAC/index.md)
+
+## 最新补充：MFSA
+
+**MFSA: A Multi-Format Systolic Array with Native Micro Scaling Support**（arXiv:2610.19645v1，2026-10-14 预印本）。共享多格式浮点点积 PE、脉动阵列和在线块缩放重标定（OBSR），覆盖 FP16/BF16、MXFP8 和 MXFP4。
+
+[全文翻译](mfsa/translation_notes.md) · [技术总结](mfsa/paper_notes.md) · [通俗讲解](mfsa/ELI5_notes.md) · [图表说明](mfsa/figs_notes.md)

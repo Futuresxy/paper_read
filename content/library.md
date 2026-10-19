@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 64 个论文条目、259 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 65 个论文条目、263 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -114,3 +114,9 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | MPICC: Multiple-Precision Inter-Combined MAC Unit with Stochastic Rounding for Ultra-Low-Precision Training | [全文翻译](<Arithmetic/mpicc/translation_notes.md>) · [技术总结](<Arithmetic/mpicc/paper_notes.md>) · [通俗讲解](<Arithmetic/mpicc/ELI5_notes.md>) · [图表说明](<Arithmetic/mpicc/figs_notes.md>) |
 | Fused FP8 4-Way Dot Product With Scaling and FP32 Accumulation | [全文翻译](<Arithmetic/fused-fp8-dot4/translation_notes.md>) · [技术总结](<Arithmetic/fused-fp8-dot4/paper_notes.md>) · [通俗讲解](<Arithmetic/fused-fp8-dot4/ELI5_notes.md>) · [图表说明](<Arithmetic/fused-fp8-dot4/figs_notes.md>) |
 | Rethinking Floating Point Overheads for Mixed Precision DNN Accelerators | [全文翻译](<Arithmetic/rethinking-floating-point-overheads/translation_notes.md>) · [技术总结](<Arithmetic/rethinking-floating-point-overheads/paper_notes.md>) · [通俗讲解](<Arithmetic/rethinking-floating-point-overheads/ELI5_notes.md>) · [图表说明](<Arithmetic/rethinking-floating-point-overheads/figs_notes.md>) |
+
+## MFSA：多格式脉动阵列与原生微缩放
+
+arXiv:2610.19645v1（2026-10-14 预印本）。
+
+[全文翻译](Arithmetic/mfsa/translation_notes.md) · [技术总结](Arithmetic/mfsa/paper_notes.md) · [通俗讲解](Arithmetic/mfsa/ELI5_notes.md) · [图表说明](Arithmetic/mfsa/figs_notes.md)

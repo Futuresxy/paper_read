@@ -35,3 +35,7 @@ title: Paper Notes
 ## 多精度算术补充论文
 
 [阅读 Low-Cost MU、三星 8K-MAC、BitFusion、Jack Unit、MXDOTP、MPICC、Fused FP8 DOT4 和 Rethinking 的 32 份报告](Arithmetic/index.md)。MPICC 配套 PPT 按要求不翻译。
+
+## 最新论文：MFSA
+
+[阅读 MFSA 全文翻译](Arithmetic/mfsa/translation_notes.md)：多格式共享点积单元、脉动阵列与原生 MX 块缩放支持（2026 年预印本）。

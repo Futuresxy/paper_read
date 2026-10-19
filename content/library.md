@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 56 个论文条目、227 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 64 个论文条目、259 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -99,3 +99,18 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 | --- | --- |
 | BitMoD: Bit-serial Mixture-of-Datatype LLM Acceleration | [全文翻译](<HPCA/bitmod/translation_notes.md>) · [技术总结](<HPCA/bitmod/paper_notes.md>) · [通俗讲解](<HPCA/bitmod/ELI5_notes.md>) · [图表说明](<HPCA/bitmod/figs_notes.md>) |
 | FIGNA: Integer Unit-Based Accelerator Design for FP-INT GEMM Preserving Numerical Accuracy | [全文翻译](<HPCA/figna/translation_notes.md>) · [技术总结](<HPCA/figna/paper_notes.md>) · [通俗讲解](<HPCA/figna/ELI5_notes.md>) · [图表说明](<HPCA/figna/figs_notes.md>) |
+
+## 多精度算术
+
+[本批版本说明与阅读目录](Arithmetic/index.md)；MPICC 配套 PPT 不在翻译范围。
+
+| 论文 | 已有报告 |
+| --- | --- |
+| Low-Cost Multiple-Precision Multiplication Unit Design For Deep Learning | [全文翻译](<Arithmetic/low-cost-multiple-precision-multiplier/translation_notes.md>) · [技术总结](<Arithmetic/low-cost-multiple-precision-multiplier/paper_notes.md>) · [通俗讲解](<Arithmetic/low-cost-multiple-precision-multiplier/ELI5_notes.md>) · [图表说明](<Arithmetic/low-cost-multiple-precision-multiplier/figs_notes.md>) |
+| A Multi-Mode 8K-MAC HW-Utilization-Aware Neural Processing Unit with a Unified Multi-Precision Datapath in 4nm Flagship Mobile SoC | [全文翻译](<Arithmetic/samsung-8k-mac-isscc2022/translation_notes.md>) · [技术总结](<Arithmetic/samsung-8k-mac-isscc2022/paper_notes.md>) · [通俗讲解](<Arithmetic/samsung-8k-mac-isscc2022/ELI5_notes.md>) · [图表说明](<Arithmetic/samsung-8k-mac-isscc2022/figs_notes.md>) |
+| Bit Fusion: Bit-Level Dynamically Composable Architecture for Accelerating Deep Neural Networks | [全文翻译](<Arithmetic/bitfusion/translation_notes.md>) · [技术总结](<Arithmetic/bitfusion/paper_notes.md>) · [通俗讲解](<Arithmetic/bitfusion/ELI5_notes.md>) · [图表说明](<Arithmetic/bitfusion/figs_notes.md>) |
+| Jack Unit: An Area- and Energy-Efficient Multiply-Accumulate (MAC) Unit Supporting Diverse Data Formats | [全文翻译](<Arithmetic/jack-unit/translation_notes.md>) · [技术总结](<Arithmetic/jack-unit/paper_notes.md>) · [通俗讲解](<Arithmetic/jack-unit/ELI5_notes.md>) · [图表说明](<Arithmetic/jack-unit/figs_notes.md>) |
+| MXDOTP: A RISC-V ISA Extension for Enabling Microscaling (MX) Floating-Point Dot Products | [全文翻译](<Arithmetic/mxdotp/translation_notes.md>) · [技术总结](<Arithmetic/mxdotp/paper_notes.md>) · [通俗讲解](<Arithmetic/mxdotp/ELI5_notes.md>) · [图表说明](<Arithmetic/mxdotp/figs_notes.md>) |
+| MPICC: Multiple-Precision Inter-Combined MAC Unit with Stochastic Rounding for Ultra-Low-Precision Training | [全文翻译](<Arithmetic/mpicc/translation_notes.md>) · [技术总结](<Arithmetic/mpicc/paper_notes.md>) · [通俗讲解](<Arithmetic/mpicc/ELI5_notes.md>) · [图表说明](<Arithmetic/mpicc/figs_notes.md>) |
+| Fused FP8 4-Way Dot Product With Scaling and FP32 Accumulation | [全文翻译](<Arithmetic/fused-fp8-dot4/translation_notes.md>) · [技术总结](<Arithmetic/fused-fp8-dot4/paper_notes.md>) · [通俗讲解](<Arithmetic/fused-fp8-dot4/ELI5_notes.md>) · [图表说明](<Arithmetic/fused-fp8-dot4/figs_notes.md>) |
+| Rethinking Floating Point Overheads for Mixed Precision DNN Accelerators | [全文翻译](<Arithmetic/rethinking-floating-point-overheads/translation_notes.md>) · [技术总结](<Arithmetic/rethinking-floating-point-overheads/paper_notes.md>) · [通俗讲解](<Arithmetic/rethinking-floating-point-overheads/ELI5_notes.md>) · [图表说明](<Arithmetic/rethinking-floating-point-overheads/figs_notes.md>) |

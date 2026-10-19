@@ -31,3 +31,7 @@ title: Paper Notes
 ## HPCA：FIGNA 与 BitMoD
 
 [阅读两篇论文的全文翻译、技术总结、通俗讲解与图表说明](HPCA/index.md)。FIGNA 为 HPCA 2024，BitMoD 为 HPCA 2025；翻译使用 Codex/GPT。
+
+## 多精度算术补充论文
+
+[阅读 Low-Cost MU、三星 8K-MAC、BitFusion、Jack Unit、MXDOTP、MPICC、Fused FP8 DOT4 和 Rethinking 的 32 份报告](Arithmetic/index.md)。MPICC 配套 PPT 按要求不翻译。

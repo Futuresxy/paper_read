@@ -95,3 +95,9 @@ Rethinking Floating Point Overheads for Mixed Precision DNN Accelerators
 **MFSA: A Multi-Format Systolic Array with Native Micro Scaling Support**（arXiv:2610.19645v1，2026-10-14 预印本）。共享多格式浮点点积 PE、脉动阵列和在线块缩放重标定（OBSR），覆盖 FP16/BF16、MXFP8 和 MXFP4。
 
 [全文翻译](mfsa/translation_notes.md) · [技术总结](mfsa/paper_notes.md) · [通俗讲解](mfsa/ELI5_notes.md) · [图表说明](mfsa/figs_notes.md)
+
+## 最新补充：MX-like Tensor Core
+
+**MX-like Tensor Core for LLM Inference with NPU Integration via Hardware-Software Co-Design Exploration**（arXiv:2610.26083v1，2026-10-19 预印本）。研究块缩放格式、权重/激活精度与硬件成本的协同探索，包含专用 MAC 模板和 SNAX NPU 集成。
+
+[全文翻译](mx-like-tensor-core/translation_notes.md) · [技术总结](mx-like-tensor-core/paper_notes.md) · [通俗讲解](mx-like-tensor-core/ELI5_notes.md) · [图表说明](mx-like-tensor-core/figs_notes.md)

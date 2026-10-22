@@ -39,3 +39,7 @@ title: Paper Notes
 ## 最新论文：MFSA
 
 [阅读 MFSA 全文翻译](Arithmetic/mfsa/translation_notes.md)：多格式共享点积单元、脉动阵列与原生 MX 块缩放支持（2026 年预印本）。
+
+## 最新论文：MX-like Tensor Core
+
+[阅读 MX-like Tensor Core 全文翻译](Arithmetic/mx-like-tensor-core/translation_notes.md)：块缩放格式与 MAC 数据通路的软硬件协同探索（arXiv v1 作者稿，PDF 标注 ASPDAC 2027）。

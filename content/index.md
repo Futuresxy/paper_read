@@ -43,3 +43,7 @@ title: Paper Notes
 ## 最新论文：MX-like Tensor Core
 
 [阅读 MX-like Tensor Core 全文翻译](Arithmetic/mx-like-tensor-core/translation_notes.md)：块缩放格式与 MAC 数据通路的软硬件协同探索（arXiv v1 作者稿，PDF 标注 ASPDAC 2027）。
+
+## 架构建模：MMA-Sim
+
+[阅读 MMA-Sim 中文全文翻译](Architecture/mma-sim/translation_notes.md)：arXiv:2511.10909v1 作者稿，含技术解读与图表说明。

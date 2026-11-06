@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 67 个论文条目、271 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 68 个论文条目、275 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -132,3 +132,9 @@ arXiv:2610.26083v1（2026-10-19 预印本）。
 arXiv:2511.10909v1 作者稿。
 
 [全文翻译](Architecture/mma-sim/translation_notes.md) · [技术总结](Architecture/mma-sim/paper_notes.md) · [通俗讲解](Architecture/mma-sim/ELI5_notes.md) · [图表说明](Architecture/mma-sim/figs_notes.md)
+
+## 架构建模：TensorForge
+
+用户提供的匿名稿。
+
+[全文翻译](Architecture/tensorforge/translation_notes.md) · [技术总结](Architecture/tensorforge/paper_notes.md) · [通俗讲解](Architecture/tensorforge/ELI5_notes.md) · [图表说明](Architecture/tensorforge/figs_notes.md)

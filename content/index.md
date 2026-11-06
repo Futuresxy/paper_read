@@ -47,3 +47,7 @@ title: Paper Notes
 ## 架构建模：MMA-Sim
 
 [阅读 MMA-Sim 中文全文翻译](Architecture/mma-sim/translation_notes.md)：arXiv:2511.10909v1 作者稿，含技术解读与图表说明。
+
+## 架构建模：TensorForge
+
+[阅读 TensorForge 中文全文翻译](Architecture/tensorforge/translation_notes.md)：用户提供的匿名稿，含技术解读与图表说明。

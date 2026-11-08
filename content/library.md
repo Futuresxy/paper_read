@@ -5,7 +5,7 @@ description: 按分类浏览所有已有论文报告，包括早期翻译与解�
 
 # 全部论文与历史笔记
 
-共 68 个论文条目、275 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
+共 69 个论文条目、279 份现有报告，按原有分类保留。跨分类重复论文按原位置列出；部分早期论文没有全文翻译，下面只链接已经存在的报告。
 
 [DAC 合集的研究内容与阅读路线](DAC/index.md) · [返回首页](index.md)
 
@@ -138,3 +138,7 @@ arXiv:2511.10909v1 作者稿。
 用户提供的匿名稿。
 
 [全文翻译](Architecture/tensorforge/translation_notes.md) · [技术总结](Architecture/tensorforge/paper_notes.md) · [通俗讲解](Architecture/tensorforge/ELI5_notes.md) · [图表说明](Architecture/tensorforge/figs_notes.md)
+
+## Ten-Four v3
+
+[新旧版本目录](Architecture/ten-four-versions.md) · [全文翻译](Architecture/ten-four-v3/translation_notes.md) · [技术总结](Architecture/ten-four-v3/paper_notes.md) · [通俗讲解](Architecture/ten-four-v3/ELI5_notes.md) · [图表说明](Architecture/ten-four-v3/figs_notes.md)

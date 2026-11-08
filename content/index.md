@@ -51,3 +51,7 @@ title: Paper Notes
 ## 架构建模：TensorForge
 
 [阅读 TensorForge 中文全文翻译](Architecture/tensorforge/translation_notes.md)：用户提供的匿名稿，含技术解读与图表说明。
+
+## Ten-Four v3 更新
+
+[阅读新版 v3 全文翻译](Architecture/ten-four-v3/translation_notes.md) · [新旧版本并存目录](Architecture/ten-four-versions.md)。旧版链接和文件保持原样。
